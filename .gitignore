@@ -9,6 +9,9 @@
 *.user
 *.userosscache
 *.sln.docstates
+bin
+obj
+packages
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -469,3 +472,7 @@ $RECYCLE.BIN/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+client-app/package-lock.json
+client-app/package.json
+*.cache
