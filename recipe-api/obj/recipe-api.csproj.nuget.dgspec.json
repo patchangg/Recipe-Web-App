@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\allan\\Desktop\\Github\\Recipe-Web-App\\recipe-api\\recipe-api.csproj": {}
+    "c:\\Users\\allan\\Desktop\\Github\\Recipe-Web-App\\recipe-api\\recipe-api.csproj": {}
   },
   "projects": {
-    "C:\\Users\\allan\\Desktop\\Github\\Recipe-Web-App\\recipe-api\\recipe-api.csproj": {
+    "c:\\Users\\allan\\Desktop\\Github\\Recipe-Web-App\\recipe-api\\recipe-api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\allan\\Desktop\\Github\\Recipe-Web-App\\recipe-api\\recipe-api.csproj",
+        "projectUniqueName": "c:\\Users\\allan\\Desktop\\Github\\Recipe-Web-App\\recipe-api\\recipe-api.csproj",
         "projectName": "recipe-api",
-        "projectPath": "C:\\Users\\allan\\Desktop\\Github\\Recipe-Web-App\\recipe-api\\recipe-api.csproj",
+        "projectPath": "c:\\Users\\allan\\Desktop\\Github\\Recipe-Web-App\\recipe-api\\recipe-api.csproj",
         "packagesPath": "C:\\Users\\allan\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\allan\\Desktop\\Github\\Recipe-Web-App\\recipe-api\\obj\\",
+        "outputPath": "c:\\Users\\allan\\Desktop\\Github\\Recipe-Web-App\\recipe-api\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\allan\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -21,7 +21,6 @@
           "net5.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -40,6 +39,10 @@
         "net5.0": {
           "targetAlias": "net5.0",
           "dependencies": {
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[5.0.5, )"
+            },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[5.6.3, )"
