@@ -22,13 +22,15 @@ export default function RecipeList() {
                         <Grid container spacing={10}>
                         <Grid item xs={11}>
                         <Typography variant="h6">Recipe Web App</Typography>
-                        <Button color="inherit" onClick={() => { alert('Pingu') }}>
-                        Home
-                        </Button> 
+                        <Link to="/">
+                              <Button color="inherit">
+                                    Home
+                              </Button>
+                        </Link>
                         <Link to="/AddRecipe">
-                        <Button color="inherit">
-                        Add Recipe
-                        </Button> 
+                              <Button color="inherit">
+                                    Add Recipe
+                              </Button> 
                         </Link>
                         </Grid>
 
