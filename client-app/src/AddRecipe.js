@@ -9,26 +9,26 @@ export default function AddRecipe() {
       return (
             <div className="AddRecipe">
                   <AppBar position="static" style={{ background: '#2E3B55' }}>
-                  <Toolbar>
-                        <Grid container spacing={10}>
-                        <Grid item xs={11}>
-                        <Button color="inherit" onClick={() => { alert('added') }}>
-                              Home
-                        </Button> 
-                        <Button color="inherit" onClick={() => { alert('added') }}>
-                              Add Recipe
-                        </Button> 
-                        </Grid>
+                        <Toolbar>
+                              <Grid container spacing={10}>
+                              <Grid item xs={11}>
+                              <Button color="inherit" onClick={() => { alert('added') }}>
+                                    Home
+                              </Button> 
+                              <Button color="inherit" onClick={() => { alert('added') }}>
+                                    Add Recipe
+                              </Button> 
+                              </Grid>
 
-                        <Grid item xs={1}>
-                              <div>
-                              <Button color="inherit" onClick={() => { alert('I dieded') }}>
-                              Help
-                              </Button>
-                              </div>
-                        </Grid>
-                        </Grid>
-                  </Toolbar>
+                              <Grid item xs={1}>
+                                    <div>
+                                    <Button color="inherit" onClick={() => { alert('I dieded') }}>
+                                    Help
+                                    </Button>
+                                    </div>
+                              </Grid>
+                              </Grid>
+                        </Toolbar>
                   </AppBar>
             </div>
       )
