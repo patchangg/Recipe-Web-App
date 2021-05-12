@@ -17,7 +17,6 @@ export default function RecipeList() {
 
       return (
             <div className="RecipeMain">
-                  <Router>
                   <AppBar position="static" style={{ background: '#2E3B55' }}>
                   <Toolbar>
                         <Grid container spacing={10}>
@@ -54,7 +53,6 @@ export default function RecipeList() {
                               <Paper style={{height:75,width:50,}}/>
                         </Grid>
                   </Grid>
-                  </Router>
             </div>
       )
 }
