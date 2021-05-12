@@ -2,12 +2,19 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import RecipeList from './RecipeList';
+import HelpRecipe from './HelpRecipe';
+import AddRecipe from './AddRecipe';
 import reportWebVitals from './reportWebVitals';
+import { BrowserRouter } from "react-router-dom";
 
 ReactDOM.render(
+  <BrowserRouter>
   <React.StrictMode>
     <RecipeList />
+    <AddRecipe />
+    <HelpRecipe />
   </React.StrictMode>,
+  </BrowserRouter>,
   document.getElementById('root')
 );
 
