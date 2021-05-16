@@ -22,15 +22,15 @@ export default function RecipeList() {
             <div className={classes.root}>
                   <AppBar position="static" style={{ background: '#2E3B55' }}>
                   <Toolbar>
-                        <Typography variant="h6">Recipe Web App  </Typography>
+                        <Typography variant="h6">Recipe Manager</Typography>
                         <Typography variant="h6" className={classes.title}>
                         <Box m={2}>
-                        <Link to="/"><Button variant="contained" color="primary">Home</Button></Link>
+                        <Link to="/" style={{ textDecoration: 'none' }}><Button variant="contained" color="primary">Home</Button></Link>
                         &nbsp;&nbsp;
-                        <Link to="/AddRecipe"><Button variant="contained" color="primary">Add Recipe</Button></Link>
+                        <Link to="/AddRecipe" style={{ textDecoration: 'none' }}><Button variant="contained" color="primary">Add Recipe</Button></Link>
                         </Box>
                         </Typography>
-                        <Link to="/HelpRecipe"><Button variant="contained" color="primary">Help</Button></Link>
+                        <Link to="/HelpRecipe" style={{ textDecoration: 'none' }}><Button variant="contained" color="primary">Help</Button></Link>
                   </Toolbar>
                   </AppBar>
             </div>

@@ -3,6 +3,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import { spacing } from '@material-ui/system';
 
 export default function AddRecipe() {
 
@@ -20,7 +21,7 @@ export default function AddRecipe() {
                         type="file"
                   />
                   <h1>Ingredients</h1>
-                  <TextField style = {{width: "350px"}}/>
+                  <TextField style = {{width: "350px", marginRight: "10px"}}/>
                   <Button variant="contained">Add Ingredient</Button>
                   <List>100kg Bananas                   
                   <IconButton edge="end" aria-label="delete">
