@@ -8,18 +8,27 @@ import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
+import Modal from '@material-ui/core/Modal';
+import { Link } from 'react-router-dom';
+import TextField from '@material-ui/core/TextField';
+
+function rand() {
+  return Math.round(Math.random() * 20) - 10;
+}
+
+function getModalStyle() {
+  const top = 50;
+  const left = 50;
+
+  return {
+    top: `${top}%`,
+    left: `${left}%`,
+    transform: `translate(-${top}%, -${left}%)`,
+  };
+}
+
 
 const useStyles = makeStyles((theme) => ({
-      icon: {
-        marginRight: theme.spacing(2),
-      },
-      heroContent: {
-        backgroundColor: theme.palette.background.paper,
-        padding: theme.spacing(8, 0, 6),
-      },
-      heroButtons: {
-        marginTop: theme.spacing(4),
-      },
       cardGrid: {
         paddingTop: theme.spacing(8),
         paddingBottom: theme.spacing(8),
@@ -35,15 +44,54 @@ const useStyles = makeStyles((theme) => ({
       cardContent: {
         flexGrow: 1,
       },
-
+      paper: {
+        position: 'absolute',
+        width: 400,
+        backgroundColor: theme.palette.background.paper,
+        border: '2px solid #000',
+        boxShadow: theme.shadows[5],
+        padding: theme.spacing(2, 4, 3),
+      },
     }));
 
+  
     const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 export default function RecipeList() {
       const classes = useStyles();
+      const [modalStyle] = React.useState(getModalStyle);
+      const [open, setOpen] = React.useState(false);
+      const handleOpen = () => {
+        setOpen(true);
+      };
+    
+      const handleClose = () => {
+        setOpen(false);
+      };
+
+      const body = (
+        <div style={modalStyle} className={classes.paper}>
+          <h2 id="simple-modal-title">Text in a modal</h2>
+          <p id="simple-modal-description">
+            Hello There
+          </p>
+        </div>
+      );
       return (
             <div className="RecipeMain">
+            <Grid justify="space-between" container>
+              <Grid item xs={2}></Grid>
+              <Grid item>
+                  <div alignItems='center'>
+                  <center><h1> Recipe List</h1></center>
+                  </div>
+              </Grid>
+              <Grid item >
+                <div style={{ padding: 20 }}>
+                <TextField id="outlined-basic" label="Search" variant="outlined" style = {{width: "300px"}}/>
+                </div>
+              </Grid>
+            </Grid>
         <Container className={classes.cardGrid} maxWidth="md">
           <Grid container spacing={4}>
             {cards.map((card) => (
@@ -63,12 +111,22 @@ export default function RecipeList() {
                     </Typography>
                   </CardContent>
                   <CardActions>
-                    <Button size="small" color="primary">
+                    <Button size="small" color="primary" onClick={handleOpen}>
                       View
                     </Button>
+                    <Modal
+                      open={open}
+                      onClose={handleClose}
+                      aria-labelledby="simple-modal-title"
+                      aria-describedby="simple-modal-description"
+                    >
+                      {body}
+                    </Modal>
+                    <Link to="/EditRecipe">
                     <Button size="small" color="primary">
                       Edit
                     </Button>
+                    </Link>
                     <Button size="small" color="primary">
                       Delete
                     </Button>
