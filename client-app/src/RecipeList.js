@@ -1,19 +1,8 @@
 import React from 'react';
-import Button from '@material-ui/core/Button';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
-import Grid from '@material-ui/core/Grid';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-import Typography from '@material-ui/core/Typography';
-import Modal from '@material-ui/core/Modal';
 import { Link } from 'react-router-dom';
-import TextField from '@material-ui/core/TextField';
-import DeleteIcon from '@material-ui/icons/Delete';
-import VisibilityIcon from '@material-ui/icons/Visibility';
-import EditIcon from '@material-ui/icons/Edit';
+import { Button, Card, CardActions, CardContent, CardMedia, 
+  Container, Grid, Modal, makeStyles, TextField, Typography } from '@material-ui/core';
+import { Delete, Edit, Visibility } from '@material-ui/icons';
 
 function getModalStyle() {
   const top = 50;
@@ -24,6 +13,7 @@ function getModalStyle() {
     left: `${left}%`,
     transform: `translate(-${top}%, -${left}%)`,
   };
+
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -31,17 +21,21 @@ const useStyles = makeStyles((theme) => ({
         paddingTop: theme.spacing(5),
         paddingBottom: theme.spacing(5),
       },
+
       card: {
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
       },
+
       cardMedia: {
         paddingTop: '56.25%', // 16:9
       },
+
       cardContent: {
         flexGrow: 1,
       },
+
       paper: {
         position: 'absolute',
         width: 400,
@@ -50,14 +44,17 @@ const useStyles = makeStyles((theme) => ({
         boxShadow: theme.shadows[5],
         padding: theme.spacing(2, 4, 3),
       },
+
     }));
 
     const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 export default function RecipeList() {
+
       const classes = useStyles();
       const [modalStyle] = React.useState(getModalStyle);
       const [open, setOpen] = React.useState(false);
+      
       const handleOpen = () => {
         setOpen(true);
       };
@@ -109,7 +106,7 @@ export default function RecipeList() {
                           </Typography>
                         </CardContent>
                         <CardActions style={{ paddingLeft: '13px' }}>
-                          <Button variant="contained" size="small" color="default" onClick={handleOpen} className={classes.button} startIcon={<VisibilityIcon />}>
+                          <Button variant="contained" size="small" color="default" onClick={handleOpen} className={classes.button} startIcon={<Visibility />}>
                             View
                           </Button>
                           <Modal
@@ -121,11 +118,11 @@ export default function RecipeList() {
                             {body}
                           </Modal>
                           <Link to="/EditRecipe" style={{ textDecoration: 'none' }}>
-                            <Button variant="contained" size="small" color="primary" onClick={handleOpen} className={classes.button} startIcon={<EditIcon />}>
+                            <Button variant="contained" size="small" color="primary" onClick={handleOpen} className={classes.button} startIcon={<Edit />}>
                               Edit
                             </Button>
                           </Link>
-                          <Button variant="contained" size="small" color="secondary" className={classes.button} startIcon={<DeleteIcon />}>
+                          <Button variant="contained" size="small" color="secondary" className={classes.button} startIcon={<Delete />}>
                             Delete
                           </Button>
                         </CardActions>

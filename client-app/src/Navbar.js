@@ -23,12 +23,12 @@ export default function RecipeList() {
                   <AppBar position="static" style={{ background: '#2E3B55' }}>
                   <Toolbar>
                         <Typography variant="h6">Recipe Manager</Typography>
-                        <Typography variant="h6" className={classes.title}>
-                        <Box m={2}>
-                        <Link to="/" style={{ textDecoration: 'none' }}><Button variant="contained" color="primary">Home</Button></Link>
-                        &nbsp;&nbsp;
-                        <Link to="/AddRecipe" style={{ textDecoration: 'none' }}><Button variant="contained" color="primary">Add Recipe</Button></Link>
-                        </Box>
+                              <Typography variant="h6" className={classes.title}>
+                                    <Box m={2}>
+                                          <Link to="/" style={{ textDecoration: 'none' }}><Button variant="contained" color="primary">Home</Button></Link>
+                                          &nbsp;&nbsp;
+                                          <Link to="/AddRecipe" style={{ textDecoration: 'none' }}><Button variant="contained" color="primary">Add Recipe</Button></Link>
+                                    </Box>
                         </Typography>
                         <Link to="/HelpRecipe" style={{ textDecoration: 'none' }}><Button variant="contained" color="primary">Help</Button></Link>
                   </Toolbar>
