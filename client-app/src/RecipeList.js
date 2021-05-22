@@ -26,11 +26,10 @@ function getModalStyle() {
   };
 }
 
-
 const useStyles = makeStyles((theme) => ({
       cardGrid: {
-        paddingTop: theme.spacing(8),
-        paddingBottom: theme.spacing(8),
+        paddingTop: theme.spacing(5),
+        paddingBottom: theme.spacing(5),
       },
       card: {
         height: '100%',
@@ -53,7 +52,6 @@ const useStyles = makeStyles((theme) => ({
       },
     }));
 
-  
     const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 export default function RecipeList() {
@@ -88,7 +86,7 @@ export default function RecipeList() {
                 </Grid>
                 <Grid item >
                   <div style={{ padding: 20 }}>
-                  <TextField id="outlined-basic" label="Search" variant="outlined" style = {{width: "300px"}}/>
+                    <TextField id="outlined-basic" label="Search" variant="outlined" style = {{width: "300px"}}/>
                   </div>
                 </Grid>
               </Grid>
@@ -110,7 +108,7 @@ export default function RecipeList() {
                             Delicious Cake
                           </Typography>
                         </CardContent>
-                        <CardActions>
+                        <CardActions style={{ paddingLeft: '13px' }}>
                           <Button variant="contained" size="small" color="default" onClick={handleOpen} className={classes.button} startIcon={<VisibilityIcon />}>
                             View
                           </Button>
