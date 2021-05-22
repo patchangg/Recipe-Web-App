@@ -11,10 +11,9 @@ import Typography from '@material-ui/core/Typography';
 import Modal from '@material-ui/core/Modal';
 import { Link } from 'react-router-dom';
 import TextField from '@material-ui/core/TextField';
-
-function rand() {
-  return Math.round(Math.random() * 20) - 10;
-}
+import DeleteIcon from '@material-ui/icons/Delete';
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import EditIcon from '@material-ui/icons/Edit';
 
 function getModalStyle() {
   const top = 50;
@@ -77,65 +76,66 @@ export default function RecipeList() {
           </p>
         </div>
       );
+
       return (
             <div className="RecipeMain">
-            <Grid justify="space-between" container>
-              <Grid item xs={2}></Grid>
-              <Grid item>
-                  <div alignItems='center'>
-                  <center><h1> Recipe List</h1></center>
+              <Grid justify="space-between" container>
+                <Grid item xs={2}></Grid>
+                <Grid item>
+                    <div alignItems='center'>
+                    <center><h1> Recipe List</h1></center>
+                    </div>
+                </Grid>
+                <Grid item >
+                  <div style={{ padding: 20 }}>
+                  <TextField id="outlined-basic" label="Search" variant="outlined" style = {{width: "300px"}}/>
                   </div>
+                </Grid>
               </Grid>
-              <Grid item >
-                <div style={{ padding: 20 }}>
-                <TextField id="outlined-basic" label="Search" variant="outlined" style = {{width: "300px"}}/>
-                </div>
-              </Grid>
-            </Grid>
-        <Container className={classes.cardGrid} maxWidth="md">
-          <Grid container spacing={4}>
-            {cards.map((card) => (
-              <Grid item key={card} xs={12} sm={6} md={4}>
-                <Card className={classes.card}>
-                  <CardMedia
-                    className={classes.cardMedia}
-                    image="https://source.unsplash.com/random"
-                    title="Image title"
-                  />
-                  <CardContent className={classes.cardContent}>
-                    <Typography gutterBottom variant="h5" component="h2">
-                      Recipe
-                    </Typography>
-                    <Typography>
-                      Delicious Cake
-                    </Typography>
-                  </CardContent>
-                  <CardActions>
-                    <Button size="small" color="primary" onClick={handleOpen}>
-                      View
-                    </Button>
-                    <Modal
-                      open={open}
-                      onClose={handleClose}
-                      aria-labelledby="simple-modal-title"
-                      aria-describedby="simple-modal-description"
-                    >
-                      {body}
-                    </Modal>
-                    <Link to="/EditRecipe">
-                    <Button size="small" color="primary">
-                      Edit
-                    </Button>
-                    </Link>
-                    <Button size="small" color="primary">
-                      Delete
-                    </Button>
-                  </CardActions>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        </Container>
+              <Container className={classes.cardGrid} maxWidth="md">
+                <Grid container spacing={4}>
+                  {cards.map((card) => (
+                    <Grid item key={card} xs={12} sm={6} md={4}>
+                      <Card className={classes.card}>
+                        <CardMedia
+                          className={classes.cardMedia}
+                          image="https://source.unsplash.com/random"
+                          title="Image title"
+                        />
+                        <CardContent className={classes.cardContent}>
+                          <Typography gutterBottom variant="h5" component="h2">
+                            Recipe
+                          </Typography>
+                          <Typography>
+                            Delicious Cake
+                          </Typography>
+                        </CardContent>
+                        <CardActions>
+                          <Button variant="contained" size="small" color="default" onClick={handleOpen} className={classes.button} startIcon={<VisibilityIcon />}>
+                            View
+                          </Button>
+                          <Modal
+                            open={open}
+                            onClose={handleClose}
+                            aria-labelledby="simple-modal-title"
+                            aria-describedby="simple-modal-description"
+                          >
+                            {body}
+                          </Modal>
+                          <Link to="/EditRecipe" style={{ textDecoration: 'none' }}>
+                            <Button variant="contained" size="small" color="primary" onClick={handleOpen} className={classes.button} startIcon={<EditIcon />}>
+                              Edit
+                            </Button>
+                          </Link>
+                          <Button variant="contained" size="small" color="secondary" className={classes.button} startIcon={<DeleteIcon />}>
+                            Delete
+                          </Button>
+                        </CardActions>
+                      </Card>
+                    </Grid>
+                  ))}
+                </Grid>
+              </Container>
             </div>
       )
 }
