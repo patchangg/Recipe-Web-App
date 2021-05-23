@@ -14,10 +14,10 @@ namespace recipe_api.Models
         public string description { get; set; }
 
         // Recipe Ingredients
-        public string[] ingredients { get; set; }
+        public string ingredients { get; set; }
 
         // Recipe Cooking Instructions
-        public string[] method { get; set; }
+        public string method { get; set; }
 
         // Recipe Image
         public string image { get; set; }
