@@ -1,14 +1,20 @@
 import React from 'react';
 import { Button, List, Paper, IconButton, TextField } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
+import axios from "axios";
 
 const initialList = [];
+
+const axiosAPI = axios.create({
+      baseURL: 'https://localhost:5001',
+      headers: {'Access-Control-Allow-Origin': 'https://localhost:5001'}
+})
 
 export default function AddRecipe() {
 
       const [value, setValue] = React.useState('');
       const [list, setList] = React.useState(initialList);
-      
+
       const handleChange = event => {
             setValue(event.target.value);
           };
@@ -24,6 +30,13 @@ export default function AddRecipe() {
       const handleClick = id => {
             setList(list.filter(item => item.id !== id));
       };
+
+      function getRecipes() {
+            const apiUrl = 'https://localhost:5001/api/Recipe'
+            axiosAPI.get('/api/Recipe').then(res =>{
+                  console.log(res.data)
+            });
+      }
 
       return (
             <div className="AddRecipe">
@@ -69,7 +82,8 @@ export default function AddRecipe() {
                               variant="outlined"
                               />
                         <p>
-                              <button>Add Recipe</button>
+                              <button onClick={getRecipes}>Add Recipe</button>
+                              
                         </p>
                   </center>
             </div>
