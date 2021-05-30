@@ -7,13 +7,18 @@ const initialList = [];
 
 const axiosAPI = axios.create({
       baseURL: 'https://localhost:5001',
-      headers: {'Access-Control-Allow-Origin': 'https://localhost:5001'}
+      headers: {'Access-Control-Allow-Origin': 'https://localhost:5001',
+                  "Content-type": "application/json"}
 })
 
 export default function AddRecipe() {
 
       const [value, setValue] = React.useState('');
       const [list, setList] = React.useState(initialList);
+      const [title,setTitle] = React.useState('');
+      const [description,setDescription] = React.useState('');
+      const [method,setMethod] = React.useState('');
+      const [image,setImage] = React.useState(null);
 
       const handleChange = event => {
             setValue(event.target.value);
@@ -31,18 +36,44 @@ export default function AddRecipe() {
             setList(list.filter(item => item.id !== id));
       };
 
-      function getRecipes() {
-            const apiUrl = 'https://localhost:5001/api/Recipe'
-            axiosAPI.get('/api/Recipe').then(res =>{
+      const handleFile = event => {
+            console.log(event.target.files, "$$$$")
+            console.log(event.target.files[0], "$$$$")
+            let file = event.target.files[0]
+            setImage(file)
+      }
+
+      const handleTitle = event => {
+            setTitle(event.target.value)
+      }
+
+      const handleDescription = event => {
+            setDescription(event.target.value)
+      }
+
+      const handleMethod = event => {
+            setMethod(event.target.value)
+      }
+
+      const handlePost = event => {
+            event.preventDefault();
+            axiosAPI.post('/api/Recipe', 
+                  {title: title,
+                  description: description,
+                  ingredients: JSON.stringify(list),
+                  method: method,
+                  image: image, }).then(res =>{
+                  console.log(res)
                   console.log(res.data)
             });
       }
+
 
       return (
             <div className="AddRecipe">
                   <center>
                         <h1>Recipe Name</h1>
-                              <TextField style = {{width: "500px"}}/>
+                              <TextField style = {{width: "500px"}} name="title" onChange={(event)=>handleTitle(event)}/>
                         <h1>Description</h1>
                               <TextField
                               id="outlined-textarea"
@@ -51,9 +82,11 @@ export default function AddRecipe() {
                               style = {{width: "600px", marginRight: "10px"}}
                               multiline
                               variant="outlined"
+                              name="description"
+                              onChange={(event)=>handleDescription(event)}
                               />
                         <h1>Image</h1>
-                              <input type="file"/>
+                              <input type="file" name="image" onChange={(event)=>handleFile(event)}/>
                         <h1>Ingredients</h1>
                               <form onSubmit={handleSubmit}>
                                     <TextField style = {{width: "350px", marginRight: "10px"}}
@@ -80,9 +113,11 @@ export default function AddRecipe() {
                               style = {{width: "550px", marginRight: "10px"}}
                               multiline
                               variant="outlined"
+                              name="method"
+                              onChange={(event)=>handleMethod(event)}
                               />
                         <p>
-                              <button onClick={getRecipes}>Add Recipe</button>
+                              <button type="submit" onClick={handlePost}>Add Recipe</button>
                               
                         </p>
                   </center>

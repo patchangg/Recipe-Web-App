@@ -1,4 +1,5 @@
-import React from 'react';
+import axios from "axios";
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Card, CardActions, CardContent, CardMedia, 
   Container, Grid, Modal, makeStyles, TextField, Typography } from '@material-ui/core';
@@ -15,6 +16,11 @@ function getModalStyle() {
   };
 
 }
+const axiosAPI = axios.create({
+  baseURL: 'https://localhost:5001',
+  headers: {'Access-Control-Allow-Origin': 'https://localhost:5001',
+              "Content-type": "application/json"}
+})
 
 const useStyles = makeStyles((theme) => ({
       cardGrid: {
@@ -50,11 +56,13 @@ const useStyles = makeStyles((theme) => ({
     const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 export default function RecipeList() {
-
       const classes = useStyles();
       const [modalStyle] = React.useState(getModalStyle);
       const [open, setOpen] = React.useState(false);
-      
+      const [appState, setAppState] = useState({
+        recipes: []
+      });
+
       const handleOpen = () => {
         setOpen(true);
       };
@@ -72,8 +80,11 @@ export default function RecipeList() {
         </div>
       );
 
+
+
       return (
             <div className="RecipeMain">
+              {appState.recipes}
               <Grid justify="space-between" container>
                 <Grid item xs={2}></Grid>
                 <Grid item>
