@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Card, CardActions, CardContent, CardMedia, 
   Container, Grid, Modal, makeStyles, TextField, Typography } from '@material-ui/core';
@@ -53,16 +53,17 @@ const useStyles = makeStyles((theme) => ({
 
     }));
 
-    const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    //const cards = [0,1,2,2123132132];
 
 export default function RecipeList() {
       const classes = useStyles();
-      const [modalStyle] = React.useState(getModalStyle);
-      const [open, setOpen] = React.useState(false);
-      const [appState, setAppState] = useState({
-        recipes: []
-      });
-
+      const [modalStyle] = useState(getModalStyle);
+      const [open, setOpen] = useState(false);
+      // const [appState, setAppState] = useState({
+      //   recipes: []
+      // });
+      const [recipes,setRecipes] = useState([])
+      //const [cardz,setCardz] = useState(0)
       const handleOpen = () => {
         setOpen(true);
       };
@@ -71,20 +72,36 @@ export default function RecipeList() {
         setOpen(false);
       };
 
-      const body = (
-        <div style={modalStyle} className={classes.paper}>
-          <h2 id="simple-modal-title">Text in a modal</h2>
-          <p id="simple-modal-description">
-            Hello There
-          </p>
-        </div>
-      );
+      // const body = (
+      //   <div style={modalStyle} className={classes.paper}>
+      //     <h2 id="simple-modal-title">Text in a modal</h2>
+      //     <p id="simple-modal-description">
+      //       Hello There
+      //     </p>
+      //   </div>
+      // );
 
+      useEffect(() => {
+        axiosAPI.get('/api/Recipe').then(res =>{
+              console.log(res.data)
+              const databby = res.data;
+              //setAppState({ recipes: databby })
+              setRecipes(databby)
+        });
+      }, [] );
 
+      const handleDelete = event => {
+        //event.preventDefault();
+        const delUrl = '/api/Recipe/' + event
+        console.log(delUrl + "hello")
+        axiosAPI.delete(delUrl).then(res =>{
+          console.log(res.data)
+          window.location.reload();
+        })
+      };
 
       return (
             <div className="RecipeMain">
-              {appState.recipes}
               <Grid justify="space-between" container>
                 <Grid item xs={2}></Grid>
                 <Grid item>
@@ -100,8 +117,8 @@ export default function RecipeList() {
               </Grid>
               <Container className={classes.cardGrid} maxWidth="md">
                 <Grid container spacing={4}>
-                  {cards.map((card) => (
-                    <Grid item key={card} xs={12} sm={6} md={4}>
+                  {recipes.map((recipe) => (
+                    <Grid item key={recipe.id} xs={12} sm={6} md={4}>
                       <Card className={classes.card}>
                         <CardMedia
                           className={classes.cardMedia}
@@ -110,10 +127,10 @@ export default function RecipeList() {
                         />
                         <CardContent className={classes.cardContent}>
                           <Typography gutterBottom variant="h5" component="h2">
-                            Recipe
+                            {recipe.title}
                           </Typography>
                           <Typography>
-                            Delicious Cake
+                            {recipe.description}
                           </Typography>
                         </CardContent>
                         <CardActions style={{ paddingLeft: '13px' }}>
@@ -126,14 +143,21 @@ export default function RecipeList() {
                             aria-labelledby="simple-modal-title"
                             aria-describedby="simple-modal-description"
                           >
-                            {body}
+                              <div style={modalStyle} className={classes.paper}>
+                                <h2 id="simple-modal-title">{recipe.title}</h2>
+                                  <p id="simple-modal-description">
+                                    {recipe.description}
+                                    {recipe.ingredients}
+                                    {recipe.method}
+                                  </p>
+                            </div>
                           </Modal>
-                          <Link to="/EditRecipe" style={{ textDecoration: 'none' }}>
+                          <Link to={{pathname: "/EditRecipe", state: recipe}}  style={{ textDecoration: 'none' }}>
                             <Button variant="contained" size="small" color="primary" onClick={handleOpen} className={classes.button} startIcon={<Edit />}>
                               Edit
                             </Button>
                           </Link>
-                          <Button variant="contained" size="small" color="secondary" className={classes.button} startIcon={<Delete />}>
+                          <Button variant="contained" size="small" color="secondary" onClick={(event) => handleDelete( recipe.id ) } className={classes.button} startIcon={<Delete />}>
                             Delete
                           </Button>
                         </CardActions>

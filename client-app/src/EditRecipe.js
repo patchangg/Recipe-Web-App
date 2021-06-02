@@ -9,7 +9,11 @@ export default function EditRecipe() {
 
       const [value, setValue] = React.useState('');
       const [list, setList] = React.useState(initialList);
-      
+      const [title,setTitle] = React.useState('');
+      const [description,setDescription] = React.useState('');
+      const [method,setMethod] = React.useState('');
+      const [image,setImage] = React.useState(null);
+
       const handleChange = event => {
             setValue(event.target.value);
           };
