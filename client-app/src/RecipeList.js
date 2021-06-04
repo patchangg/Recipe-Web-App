@@ -152,7 +152,7 @@ export default function RecipeList() {
                                   </p>
                             </div>
                           </Modal>
-                          <Link to={{pathname: "/EditRecipe", state: recipe}}  style={{ textDecoration: 'none' }}>
+                          <Link to={{pathname: "/EditRecipe", state: { data: recipe.id }}} style={{ textDecoration: 'none' }}>
                             <Button variant="contained" size="small" color="primary" onClick={handleOpen} className={classes.button} startIcon={<Edit />}>
                               Edit
                             </Button>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Button, List, Paper, IconButton, TextField } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import axios from "axios";
@@ -117,8 +118,9 @@ export default function AddRecipe() {
                               onChange={(event)=>handleMethod(event)}
                               />
                         <p>
+                        <Link to="/">
                               <button type="submit" onClick={handlePost}>Add Recipe</button>
-                              
+                        </Link>
                         </p>
                   </center>
             </div>
