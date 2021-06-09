@@ -118,9 +118,7 @@ export default function AddRecipe() {
                               onChange={(event)=>handleMethod(event)}
                               />
                         <p>
-                        <Link to="/">
                               <button type="submit" onClick={handlePost}>Add Recipe</button>
-                        </Link>
                         </p>
                   </center>
             </div>
