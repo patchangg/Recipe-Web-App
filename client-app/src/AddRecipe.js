@@ -15,27 +15,30 @@ const axiosAPI = axios.create({
 export default function AddRecipe() {
 
       const [value, setValue] = React.useState('');
-      const [list, setList] = React.useState(initialList);
+      const [ingredients, setIngredients] = React.useState(initialList);
       const [title,setTitle] = React.useState('');
       const [description,setDescription] = React.useState('');
       const [method,setMethod] = React.useState('');
-      const [image,setImage] = React.useState(null);
+      const [image,setImage] = React.useState('default');
+      const [name,setName] = React.useState('');
 
-      const handleChange = event => {
+      function handleChange(event) {
             setValue(event.target.value);
-          };
-         
-      const handleSubmit = event => {
-      if (value) {
-            setList(list.concat(value));
       }
-      setValue('');
-      event.preventDefault();
-      };
+         
+      function handleAdd() {
+            const newList = ingredients.concat({ value }); 
+            setIngredients(newList);
+            setValue('');
+      }
 
-      const handleClick = id => {
-            setList(list.filter(item => item.id !== id));
-      };
+      function handleRemove(value) {
+            console.log(ingredients)
+            console.log(value)
+            const newList = ingredients.filter((item) => item.value !== value);
+            console.log(newList)
+            setIngredients(newList);
+      }
 
       const handleFile = event => {
             console.log(event.target.files, "$$$$")
@@ -56,14 +59,38 @@ export default function AddRecipe() {
             setMethod(event.target.value)
       }
 
+      const imageUpload = () => {
+            let uploadData = new FormData();
+            uploadData.append("file", image);
+            uploadData.append("public_id", name);
+            uploadData.append("upload_preset", 'recipeAPI');
+        
+            const res = fetch("https://api.cloudinary.com/v1_1/dhevhiahl/image/upload", {
+                  method:'POST',
+                  body:uploadData
+            })
+
+            const resultFile = res.json()
+            console.log(resultFile)
+            console.log(resultFile.secure_url)
+            setName(resultFile.secure_url)
+      }
+
       const handlePost = event => {
             event.preventDefault();
+            console.log(typeof(image))
+            console.log(image)
+            if (image === 'default') {
+                  setName('https://res.cloudinary.com/dhevhiahl/image/upload/v1623412439/recipeAPI/default.png')
+            } else {
+                  imageUpload()
+            }
             axiosAPI.post('/api/Recipe', 
                   {title: title,
                   description: description,
-                  ingredients: JSON.stringify(list),
+                  ingredients: JSON.stringify(ingredients),
                   method: method,
-                  image: image, }).then(res =>{
+                  image: name, }).then(res =>{
                   console.log(res)
                   console.log(res.data)
             });
@@ -89,17 +116,15 @@ export default function AddRecipe() {
                         <h1>Image</h1>
                               <input type="file" name="image" onChange={(event)=>handleFile(event)}/>
                         <h1>Ingredients</h1>
-                              <form onSubmit={handleSubmit}>
-                                    <TextField style = {{width: "350px", marginRight: "10px"}}
-                                    type="text" value={value} onChange={handleChange}/>
-                                    <Button variant="contained" type="submit">Add Ingredient</Button>
-                              </form>
+                              <TextField style = {{width: "350px", marginRight: "10px"}}
+                              type="text" value={value} onChange={handleChange}/>
+                              <Button variant="contained" type="submit" onClick={handleAdd}>Add Ingredient</Button>
                               <Paper style={{maxHeight: 200, overflow: 'auto'}}>
                                     <List>
-                                          {list.map(item => (
-                                          <li key={item}>{item}
+                                          {ingredients.map((item) => (
+                                          <li key={item}>{item.value}
                                           <IconButton edge="end" aria-label="delete">
-                                                <DeleteIcon onClick={() => handleClick(item.id)}/>
+                                                <DeleteIcon onClick={() => handleRemove(item.value)}/>
                                           </IconButton>
                                           </li>
                                           ))}                  

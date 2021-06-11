@@ -1,4 +1,5 @@
 import axios from "axios";
+import {Image, CloudinaryContext} from 'cloudinary-react';
 import React, { useState,useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Card, CardActions, CardContent, CardMedia, 
@@ -122,8 +123,8 @@ export default function RecipeList() {
                       <Card className={classes.card}>
                         <CardMedia
                           className={classes.cardMedia}
-                          image="https://source.unsplash.com/random"
-                          title="Image title"
+                          image={recipe.image}
+                          title="Default"
                         />
                         <CardContent className={classes.cardContent}>
                           <Typography gutterBottom variant="h5" component="h2">

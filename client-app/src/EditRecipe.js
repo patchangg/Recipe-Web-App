@@ -15,7 +15,7 @@ const axiosAPI = axios.create({
 export default function EditRecipe() {
 
       const [value, setValue] = useState('');
-      const [list, setList] = useState(initialList);
+      const [ingredients, setIngredients] = React.useState(initialList);
       const [title,setTitle] = useState('');
       const [description,setDescription] = useState('');
       const [method,setMethod] = useState('');
@@ -30,28 +30,30 @@ export default function EditRecipe() {
                   console.log(res.data)
                   const dataSet = res.data;
                   setRecipe(dataSet)
-                  setList(JSON.parse(dataSet.ingredients))
+                  setIngredients(JSON.parse(dataSet.ingredients))
                   setTitle(dataSet.title)
                   setDescription(dataSet.description)
                   setMethod(dataSet.method)
             });
           }, [] );
 
-      const handleChange = event => {
+      function handleChange(event) {
             setValue(event.target.value);
-          };
-         
-      const handleSubmit = event => {
-      if (value) {
-            setList(list.concat(value));
       }
-      setValue('');
-      event.preventDefault();
-      };
+         
+      function handleAdd() {
+            const newList = ingredients.concat({ value }); 
+            setIngredients(newList);
+            setValue('');
+      }
 
-      const handleClick = id => {
-            setList(list.filter(item => item.id !== id));
-      };
+      function handleRemove(value) {
+            console.log(ingredients)
+            console.log(value)
+            const newList = ingredients.filter((item) => item.value !== value);
+            console.log(newList)
+            setIngredients(newList);
+      }
 
       const handleFile = event => {
             console.log(event.target.files, "$$$$")
@@ -79,7 +81,7 @@ export default function EditRecipe() {
                   {id: locations.state.data,
                   title: title,
                   description: description,
-                  ingredients: JSON.stringify(list),
+                  ingredients: JSON.stringify(ingredients),
                   method: method,
                   image: image, }).then(res =>{
                   console.log(res)
@@ -107,17 +109,15 @@ export default function EditRecipe() {
                         <h1>Image</h1>
                               <input type="file" name="image" onChange={(event)=>handleFile(event)}/>
                         <h1>Ingredients</h1>
-                              <form onSubmit={handleSubmit}>
-                                    <TextField style = {{width: "350px", marginRight: "10px"}}
-                                    type="text" value={value} onChange={handleChange}/>
-                                    <Button variant="contained" type="submit">Add Ingredient</Button>
-                              </form>
+                              <TextField style = {{width: "350px", marginRight: "10px"}}
+                              type="text" value={value} onChange={handleChange}/>
+                              <Button variant="contained" type="submit" onClick={handleAdd}>Add Ingredient</Button>
                               <Paper style={{maxHeight: 200, overflow: 'auto'}}>
                                     <List>
-                                          {list.map(item => (
-                                          <li key={item}>{item}
+                                          {ingredients.map(item => (
+                                          <li key={item}>{item.value}
                                           <IconButton edge="end" aria-label="delete">
-                                                <DeleteIcon onClick={() => handleClick(item.id)}/>
+                                                <DeleteIcon onClick={() => handleRemove(item.value)}/>
                                           </IconButton>
                                           </li>
                                           ))}                  
