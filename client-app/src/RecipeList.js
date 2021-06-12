@@ -3,7 +3,7 @@ import {Image, CloudinaryContext} from 'cloudinary-react';
 import React, { useState,useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Card, CardActions, CardContent, CardMedia, 
-  Container, Grid, Modal, makeStyles, TextField, Typography } from '@material-ui/core';
+  Container, Grid, makeStyles, TextField, Typography, Modal } from '@material-ui/core';
 import { Delete, Edit, Visibility } from '@material-ui/icons';
 
 function getModalStyle() {
@@ -15,8 +15,8 @@ function getModalStyle() {
     left: `${left}%`,
     transform: `translate(-${top}%, -${left}%)`,
   };
-
 }
+
 const axiosAPI = axios.create({
   baseURL: 'https://localhost:5001',
   headers: {'Access-Control-Allow-Origin': 'https://localhost:5001',
@@ -52,19 +52,28 @@ const useStyles = makeStyles((theme) => ({
         padding: theme.spacing(2, 4, 3),
       },
 
-    }));
-
-    //const cards = [0,1,2,2123132132];
+}));
 
 export default function RecipeList() {
       const classes = useStyles();
-      const [modalStyle] = useState(getModalStyle);
       const [open, setOpen] = useState(false);
+      const [modalStyle] = useState(getModalStyle);
+      const [currRecipe, setRecipe] = useState({id:'', title:'', description:'', ingredients:'', method:'', image:''});
+      const [modalOpen, setmodalOpen] = useState(false);
       // const [appState, setAppState] = useState({
       //   recipes: []
       // });
-      const [recipes,setRecipes] = useState([])
+      const [recipes,setRecipes] = useState([]);
       //const [cardz,setCardz] = useState(0)
+
+      const showModal = () => {
+        setmodalOpen(true);
+      };
+
+      const closeModal = () => {
+        setmodalOpen(false);
+      };
+
       const handleOpen = () => {
         setOpen(true);
       };
@@ -84,12 +93,12 @@ export default function RecipeList() {
 
       useEffect(() => {
         axiosAPI.get('/api/Recipe').then(res =>{
-              console.log(res.data)
               const databby = res.data;
               //setAppState({ recipes: databby })
-              setRecipes(databby)
+              //console.log(databby);
+              setRecipes(databby);
         });
-      }, [] );
+      }, []);
 
       const handleDelete = event => {
         //event.preventDefault();
@@ -135,21 +144,21 @@ export default function RecipeList() {
                           </Typography>
                         </CardContent>
                         <CardActions style={{ paddingLeft: '13px' }}>
-                          <Button variant="contained" size="small" color="default" onClick={handleOpen} className={classes.button} startIcon={<Visibility />}>
+                          <Button variant="contained" size="small" color="default" className={classes.button} onClick={() => { setRecipe({...recipe}); showModal();}} startIcon={<Visibility />}>
                             View
                           </Button>
                           <Modal
-                            open={open}
-                            onClose={handleClose}
+                            open={modalOpen}
+                            onClose={closeModal}
                             aria-labelledby="simple-modal-title"
                             aria-describedby="simple-modal-description"
                           >
                               <div style={modalStyle} className={classes.paper}>
-                                <h2 id="simple-modal-title">{recipe.title}</h2>
+                                <h2 id="simple-modal-title">{currRecipe.title}</h2>
                                   <p id="simple-modal-description">
-                                    {recipe.description}
-                                    {recipe.ingredients}
-                                    {recipe.method}
+                                    {currRecipe.description}
+                                    {currRecipe.ingredients}
+                                    {currRecipe.method}
                                   </p>
                             </div>
                           </Modal>
