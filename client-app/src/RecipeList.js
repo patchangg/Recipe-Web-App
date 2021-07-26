@@ -97,12 +97,8 @@ export default function RecipeList() {
             const title = recipesGot[id].title
             const description = recipesGot[id].description
             const image = recipesGot[id].image
-            const ingredArray = JSON.parse(recipesGot[id].ingredients)
-            const ingredients = [] 
-            for (var i=0;i<ingredArray.length;i++) {
-                ingredients.push(ingredArray[i].value+"\n")
-            }
-            console.log(typeof(ingredients),ingredients)
+            const ingredArray = Array.from(JSON.parse(recipesGot[id].ingredients))
+            const ingredients = ingredArray.map(item => item.value)
             //const recIngred = recipesGot[id].ingredients
             const method = recipesGot[id].method
             //recipesList.push({id,recTitle,recDesc,recImage,recIngred,recMethod})
@@ -176,7 +172,9 @@ export default function RecipeList() {
                                   <p id="simple-modal-description">
                                     {currRecipe.description}
                                   </p>
-                                  <p>{currRecipe.ingredients}</p>
+                                  <p>{Array.from(currRecipe.ingredients).map((ingredient) => {
+                                    return <li>{ingredient}</li>
+                                  })}</p>
                                   <p>{currRecipe.method}</p>
                                   
                             </div>
