@@ -92,17 +92,22 @@ export default function RecipeList() {
           const recipesList = [];
           const counter = 0
           for (let id in recipesGot) {
-            // console.log(recipesGot[id])
-            // console.log(recipesGot[id].ingredients)
-            // const title = recipesGot[id].title
-            // const description = recipesGot[id].description
-            // const image = recipesGot[id].image
-            // const ingredients = JSON.parse(recipesGot[id].ingredients)
+            //console.log(recipesGot[id])
+            //console.log(recipesGot[id].ingredients)
+            const title = recipesGot[id].title
+            const description = recipesGot[id].description
+            const image = recipesGot[id].image
+            const ingredArray = JSON.parse(recipesGot[id].ingredients)
+            const ingredients = [] 
+            for (var i=0;i<ingredArray.length;i++) {
+                ingredients.push(ingredArray[i].value+"\n")
+            }
+            console.log(typeof(ingredients),ingredients)
             //const recIngred = recipesGot[id].ingredients
-            //const method = recipesGot[id].method
+            const method = recipesGot[id].method
             //recipesList.push({id,recTitle,recDesc,recImage,recIngred,recMethod})
-            //recipesList.push({id,title,description,image,ingredients,method})
-             recipesList.push({id, ... recipesGot[id]});
+            recipesList.push({id,title,description,image,ingredients,method})
+             //recipesList.push({id, ... recipesGot[id]});
             // console.log(recipesList[counter].ingredients)
             
           }
@@ -173,6 +178,7 @@ export default function RecipeList() {
                                   </p>
                                   <p>{currRecipe.ingredients}</p>
                                   <p>{currRecipe.method}</p>
+                                  
                             </div>
                           </Modal>
                           <Link to={{pathname: "/EditRecipe", state: { data: recipe.id }}} style={{ textDecoration: 'none' }}>
