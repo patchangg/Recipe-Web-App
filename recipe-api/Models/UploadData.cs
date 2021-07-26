@@ -1,9 +1,8 @@
 using System;
-using Microsoft.AspNetCore.Http;
 
 namespace recipe_api.Models
 {
-    public class Recipe
+    public class UploadData
     {
         // Unique Identifier
         public Guid id { get; set; }

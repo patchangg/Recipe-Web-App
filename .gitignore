@@ -476,3 +476,4 @@ yarn-error.log*
 client-app/package-lock.json
 client-app/package.json
 *.cache
+client-app/src/util/Firebase.js

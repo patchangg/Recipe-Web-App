@@ -1,5 +1,5 @@
 import axios from "axios";
-import {Image, CloudinaryContext} from 'cloudinary-react';
+import firebase from './util/Firebase.js';
 import React, { useState,useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Card, CardActions, CardContent, CardMedia, 
@@ -17,11 +17,11 @@ function getModalStyle() {
   };
 }
 
-const axiosAPI = axios.create({
-  baseURL: 'https://localhost:5001',
-  headers: {'Access-Control-Allow-Origin': 'https://localhost:5001',
-              "Content-type": "application/json"}
-})
+// const axiosAPI = axios.create({
+//   baseURL: 'https://localhost:5001',
+//   headers: {'Access-Control-Allow-Origin': 'https://localhost:5001',
+//               "Content-type": "application/json"}
+// })
 
 const useStyles = makeStyles((theme) => ({
       cardGrid: {
@@ -60,11 +60,7 @@ export default function RecipeList() {
       const [modalStyle] = useState(getModalStyle);
       const [currRecipe, setRecipe] = useState({id:'', title:'', description:'', ingredients:'', method:'', image:''});
       const [modalOpen, setmodalOpen] = useState(false);
-      // const [appState, setAppState] = useState({
-      //   recipes: []
-      // });
       const [recipes,setRecipes] = useState([]);
-      //const [cardz,setCardz] = useState(0)
 
       const showModal = () => {
         setmodalOpen(true);
@@ -82,32 +78,49 @@ export default function RecipeList() {
         setOpen(false);
       };
 
-      // const body = (
-      //   <div style={modalStyle} className={classes.paper}>
-      //     <h2 id="simple-modal-title">Text in a modal</h2>
-      //     <p id="simple-modal-description">
-      //       Hello There
-      //     </p>
-      //   </div>
-      // );
-
       useEffect(() => {
-        axiosAPI.get('/api/Recipe').then(res =>{
-              const databby = res.data;
-              //setAppState({ recipes: databby })
-              //console.log(databby);
-              setRecipes(databby);
-        });
+      //   axiosAPI.get('/api/Recipe').then(res =>{
+      //         const recipeData = res.data;
+      //         //setAppState({ recipes: recipeData })
+      //         //console.log(recipeData);
+      //         setRecipes(recipeData);
+      //   });
+        const recipeGDBRef = firebase.database().ref('RecipeWebApp')
+        recipeGDBRef.on('value',(snapshot) =>{
+          const recipesGot = snapshot.val();
+          console.log(recipesGot)
+          const recipesList = [];
+          const counter = 0
+          for (let id in recipesGot) {
+            // console.log(recipesGot[id])
+            // console.log(recipesGot[id].ingredients)
+            // const title = recipesGot[id].title
+            // const description = recipesGot[id].description
+            // const image = recipesGot[id].image
+            // const ingredients = JSON.parse(recipesGot[id].ingredients)
+            //const recIngred = recipesGot[id].ingredients
+            //const method = recipesGot[id].method
+            //recipesList.push({id,recTitle,recDesc,recImage,recIngred,recMethod})
+            //recipesList.push({id,title,description,image,ingredients,method})
+             recipesList.push({id, ... recipesGot[id]});
+            // console.log(recipesList[counter].ingredients)
+            
+          }
+          console.log(recipesList)
+          setRecipes(recipesList)
+        })
       }, []);
 
       const handleDelete = event => {
         //event.preventDefault();
-        const delUrl = '/api/Recipe/' + event
-        console.log(delUrl + "hello")
-        axiosAPI.delete(delUrl).then(res =>{
-          console.log(res.data)
-          window.location.reload();
-        })
+        // const delUrl = '/api/Recipe/' + event
+        // console.log(delUrl + "hello")
+        // axiosAPI.delete(delUrl).then(res =>{
+        //   console.log(res.data)
+        //   window.location.reload();
+        // })
+        // const recipeGDBRef = firebase.database().ref('RecipeWebApp')
+        firebase.database().ref('RecipeWebApp/'+event).remove()
       };
 
       return (
@@ -157,9 +170,9 @@ export default function RecipeList() {
                                 <h2 id="simple-modal-title">{currRecipe.title}</h2>
                                   <p id="simple-modal-description">
                                     {currRecipe.description}
-                                    {currRecipe.ingredients}
-                                    {currRecipe.method}
                                   </p>
+                                  <p>{currRecipe.ingredients}</p>
+                                  <p>{currRecipe.method}</p>
                             </div>
                           </Modal>
                           <Link to={{pathname: "/EditRecipe", state: { data: recipe.id }}} style={{ textDecoration: 'none' }}>

@@ -1,16 +1,16 @@
+import axios from "axios";
+import firebase from './util/Firebase.js';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button, List, Paper, IconButton, TextField } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
-import axios from "axios";
+
 
 const initialList = [];
 
-const axiosAPI = axios.create({
-      baseURL: 'https://localhost:5001',
-      headers: {'Access-Control-Allow-Origin': 'https://localhost:5001',
-                  "Content-type": "application/json"}
-})
+// const axiosAPI = axios.create({
+//       baseURL: 'https://localhost:5001',
+// })
 
 export default function AddRecipe() {
 
@@ -19,8 +19,7 @@ export default function AddRecipe() {
       const [title,setTitle] = React.useState('');
       const [description,setDescription] = React.useState('');
       const [method,setMethod] = React.useState('');
-      const [image,setImage] = React.useState('default');
-      const [name,setName] = React.useState('');
+      const [image,setImage] = React.useState("https://res.cloudinary.com/dhevhiahl/image/upload/v1623412439/recipeAPI/default.png");
 
       function handleChange(event) {
             setValue(event.target.value);
@@ -40,62 +39,57 @@ export default function AddRecipe() {
             setIngredients(newList);
       }
 
-      const handleFile = event => {
-            console.log(event.target.files, "$$$$")
-            console.log(event.target.files[0], "$$$$")
-            let file = event.target.files[0]
-            setImage(file)
-      }
+      // const handleFile = event => {
+      //       console.log(event.target.files, "$$$$")
+      //       console.log(event.target.files[0], "$$$$")
+      //       let file = event.target.files[0]
+      //       imgName = file.name
+      //       setTestName(file.name)
+      //       console.log(imgName)
+      //       setImage(file)
+      // }
 
       const handleTitle = event => {
             setTitle(event.target.value)
       }
 
+      
       const handleDescription = event => {
             setDescription(event.target.value)
+      }
+
+      const handleImage = event => {
+            setImage(event.target.value)
       }
 
       const handleMethod = event => {
             setMethod(event.target.value)
       }
 
-      const imageUpload = () => {
-            let uploadData = new FormData();
-            uploadData.append("file", image);
-            uploadData.append("public_id", name);
-            uploadData.append("upload_preset", 'recipeAPI');
-        
-            const res = fetch("https://api.cloudinary.com/v1_1/dhevhiahl/image/upload", {
-                  method:'POST',
-                  body:uploadData
-            })
-
-            const resultFile = res.json()
-            console.log(resultFile)
-            console.log(resultFile.secure_url)
-            setName(resultFile.secure_url)
-      }
-
       const handlePost = event => {
-            event.preventDefault();
-            console.log(typeof(image))
-            console.log(image)
-            if (image === 'default') {
-                  setName('https://res.cloudinary.com/dhevhiahl/image/upload/v1623412439/recipeAPI/default.png')
-            } else {
-                  imageUpload()
+            const recipeGDBRef = firebase.database().ref('RecipeWebApp')
+            if (image === "") {
+                  setImage("https://res.cloudinary.com/dhevhiahl/image/upload/v1623412439/recipeAPI/default.png")
             }
-            axiosAPI.post('/api/Recipe', 
-                  {title: title,
+            recipeGDBRef.push({title: title,
                   description: description,
                   ingredients: JSON.stringify(ingredients),
                   method: method,
-                  image: name, }).then(res =>{
-                  console.log(res)
-                  console.log(res.data)
-            });
+                  image: image, })
+            // firebasePost().then(resp => {
+            //       console.log(resp)
+            // });
       }
 
+      async function firebasePost() {
+            const recipeGDBRef = firebase.database().ref('RecipeWebApp')
+            const gResponse = await recipeGDBRef.push({title: title,
+                  description: description,
+                  ingredients: JSON.stringify(ingredients),
+                  method: method,
+                  image: image, })
+            return gResponse
+      };
 
       return (
             <div className="AddRecipe">
@@ -114,7 +108,8 @@ export default function AddRecipe() {
                               onChange={(event)=>handleDescription(event)}
                               />
                         <h1>Image</h1>
-                              <input type="file" name="image" onChange={(event)=>handleFile(event)}/>
+                              <TextField style = {{width: "500px"}} name="image" label="Provide a direct url link to an image"
+                              onChange={(event)=>handleImage(event)}/>
                         <h1>Ingredients</h1>
                               <TextField style = {{width: "350px", marginRight: "10px"}}
                               type="text" value={value} onChange={handleChange}/>
