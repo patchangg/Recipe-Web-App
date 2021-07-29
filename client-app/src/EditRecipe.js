@@ -4,7 +4,7 @@ import { Link,useLocation } from 'react-router-dom';
 import { Button, List, Paper, IconButton, TextField } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import firebase from './util/Firebase.js';
-
+// Todo? Input Constrictions
 const initialList = [];
 
 const axiosAPI = axios.create({
@@ -21,47 +21,48 @@ export default function EditRecipe() {
       const [description,setDescription] = useState('');
       const [method,setMethod] = useState('');
       const [image,setImage] = useState("");
-      const [recipe,setRecipe] = useState([])
+      const [recipe,setRecipe] = useState([]);
 
       const locations = useLocation();
 
       useEffect(() => {
-            // const putURL = '/api/Recipe/' + locations.state.data
-            // axiosAPI.get(putURL).then(res =>{
-            //       console.log(res.data)
-            //       const dataSet = res.data;
-            //       setRecipe(dataSet)
-            //       setIngredients(JSON.parse(dataSet.ingredients))
-            //       setTitle(dataSet.title)
-            //       setDescription(dataSet.description)
-            //       setMethod(dataSet.method)
-            // });
-            firebase.database().ref('RecipeWebApp/'+locations.state.data).on('value',function(snapshot){
-                  setTitle(snapshot.val().title)
-                  setImage(snapshot.val().image)
-                  setIngredients(JSON.parse(snapshot.val().ingredients))
-                  setDescription(snapshot.val().description)
-                  setMethod(snapshot.val().method)
+            const putURL = '/api/Recipe/' + locations.state.data;
+            axiosAPI.get(putURL).then(res =>{
+                  //console.log(res.data);
+                  const dataSet = res.data;
+                  setRecipe(dataSet);
+                  setIngredients(JSON.parse(dataSet.ingredients));
+                  setTitle(dataSet.title);
+                  setDescription(dataSet.description);
+                  setMethod(dataSet.method);
+                  setImage(dataSet.image);
             });
+            // firebase.database().ref('RecipeWebApp/'+locations.state.data).on('value',function(snapshot){
+            //       setTitle(snapshot.val().title)
+            //       setImage(snapshot.val().image)
+            //       setIngredients(JSON.parse(snapshot.val().ingredients))
+            //       setDescription(snapshot.val().description)
+            //       setMethod(snapshot.val().method)
+            // });
           }, [] );
 
       function handleChange(event) {
             setValue(event.target.value);
-      }
+      };
          
       function handleAdd() {
             const newList = ingredients.concat({ value }); 
             setIngredients(newList);
             setValue('');
-      }
+      };
 
       function handleRemove(value) {
-            console.log(ingredients)
-            console.log(value)
+            console.log(ingredients);
+            console.log(value);
             const newList = ingredients.filter((item) => item.value !== value);
-            console.log(newList)
+            console.log(newList);
             setIngredients(newList);
-      }
+      };
 
       // const handleFile = event => {
       //       console.log(event.target.files, "$$$$")
@@ -71,42 +72,42 @@ export default function EditRecipe() {
       // }
 
       const handleTitle = event => {
-            setTitle(event.target.value)
-      }
+            setTitle(event.target.value);
+      };
 
       const handleImage = event => {
-            setImage(event.target.value)
-      }
+            setImage(event.target.value);
+      };
 
       const handleDescription = event => {
-            setDescription(event.target.value)
-      }
+            setDescription(event.target.value);
+      };
 
       const handleMethod = event => {
-            setMethod(event.target.value)
-      }
+            setMethod(event.target.value);
+      };
 
       const handlePut = event => {
             // event.preventDefault();
-            // const putURL = '/api/Recipe/' + locations.state.data
-            // axiosAPI.put(putURL, 
-            //       {id: locations.state.data,
-            //       title: title,
-            //       description: description,
-            //       ingredients: JSON.stringify(ingredients),
-            //       method: method,
-            //       image: image, }).then(res =>{
-            //       console.log(res)
-            //       console.log(res.data)
-            // });
-            firebase.database().ref('RecipeWebApp/'+locations.state.data).update({
+            const putURL = '/api/Recipe/' + locations.state.data;
+            axiosAPI.put(putURL, 
+                  {id: locations.state.data,
                   title: title,
                   description: description,
                   ingredients: JSON.stringify(ingredients),
                   method: method,
-                  image: image,
+                  image: image, }).then(res =>{
+                  console.log(res);
+                  console.log(res.data);
             });
-      }
+            // firebase.database().ref('RecipeWebApp/'+locations.state.data).update({
+            //       title: title,
+            //       description: description,
+            //       ingredients: JSON.stringify(ingredients),
+            //       method: method,
+            //       image: image,
+            // });
+      };
       return (
             <div className="EditRecipe">
                   <Link to="/">

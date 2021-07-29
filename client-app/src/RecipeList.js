@@ -15,13 +15,13 @@ function getModalStyle() {
     left: `${left}%`,
     transform: `translate(-${top}%, -${left}%)`,
   };
-}
+};
 
-// const axiosAPI = axios.create({
-//   baseURL: 'https://localhost:5001',
-//   headers: {'Access-Control-Allow-Origin': 'https://localhost:5001',
-//               "Content-type": "application/json"}
-// })
+const axiosAPI = axios.create({
+  baseURL: 'https://localhost:5001',
+  headers: {'Access-Control-Allow-Origin': 'https://localhost:5001',
+              "Content-type": "application/json"}
+});
 
 const useStyles = makeStyles((theme) => ({
       cardGrid: {
@@ -61,6 +61,7 @@ export default function RecipeList() {
       const [currRecipe, setRecipe] = useState({id:'', title:'', description:'', ingredients:'', method:'', image:''});
       const [modalOpen, setmodalOpen] = useState(false);
       const [recipes,setRecipes] = useState([]);
+      const [filter,setFilter] = useState('');
 
       const showModal = () => {
         setmodalOpen(true);
@@ -78,50 +79,75 @@ export default function RecipeList() {
         setOpen(false);
       };
 
+      const handleFilter = event => {
+        setFilter(event.target.value)
+      };
+
       useEffect(() => {
-      //   axiosAPI.get('/api/Recipe').then(res =>{
-      //         const recipeData = res.data;
-      //         //setAppState({ recipes: recipeData })
-      //         //console.log(recipeData);
-      //         setRecipes(recipeData);
-      //   });
-        const recipeGDBRef = firebase.database().ref('RecipeWebApp')
-        recipeGDBRef.on('value',(snapshot) =>{
-          const recipesGot = snapshot.val();
-          console.log(recipesGot)
-          const recipesList = [];
-          const counter = 0
-          for (let id in recipesGot) {
-            //console.log(recipesGot[id])
-            //console.log(recipesGot[id].ingredients)
-            const title = recipesGot[id].title
-            const description = recipesGot[id].description
-            const image = recipesGot[id].image
-            const ingredArray = Array.from(JSON.parse(recipesGot[id].ingredients))
-            const ingredients = ingredArray.map(item => item.value)
-            //const recIngred = recipesGot[id].ingredients
-            const method = recipesGot[id].method
-            //recipesList.push({id,recTitle,recDesc,recImage,recIngred,recMethod})
-            recipesList.push({id,title,description,image,ingredients,method})
-             //recipesList.push({id, ... recipesGot[id]});
-            // console.log(recipesList[counter].ingredients)
+        axiosAPI.get('/api/Recipe').then(res =>{
+              const recipeData = res.data;
+              //setAppState({ recipes: recipeData })
+              //console.log(recipeData);
+              for (let id in recipeData) {
+                console.log(recipeData[id].ingredients);
+                const ingredArray = Array.from(JSON.parse(recipeData[id].ingredients));
+                recipeData[id].ingredients = ingredArray.map(item => item.value);
+              }
+              setRecipes(recipeData);
+        });
+        // axiosAPI.get('/api/Recipe');
+        // const recipeGDBRef = firebase.database().ref('RecipeWebApp')
+        // recipeGDBRef.on('value',(snapshot) =>{
+        //   const recipesGot = snapshot.val();
+        //   console.log(recipesGot)
+        //   const recipesList = [];
+        //   const counter = 0
+        //   for (let id in recipesGot) {
+        //     //console.log(recipesGot[id])
+        //     //console.log(recipesGot[id].ingredients)
+        //     const title = recipesGot[id].title
+        //     const description = recipesGot[id].description
+        //     const image = recipesGot[id].image
+        //     const ingredArray = Array.from(JSON.parse(recipesGot[id].ingredients))
+        //     const ingredients = ingredArray.map(item => item.value)
+        //     //const recIngred = recipesGot[id].ingredients
+        //     const method = recipesGot[id].method
+        //     //recipesList.push({id,recTitle,recDesc,recImage,recIngred,recMethod})
+        //     recipesList.push({id,title,description,image,ingredients,method})
+        //      //recipesList.push({id, ... recipesGot[id]});
+        //     // console.log(recipesList[counter].ingredients)
             
-          }
-          console.log(recipesList)
-          setRecipes(recipesList)
-        })
+        //   }
+        //   console.log(recipesList)
+        //   setRecipes(recipesList)
+        // })
       }, []);
 
       const handleDelete = event => {
         //event.preventDefault();
-        // const delUrl = '/api/Recipe/' + event
-        // console.log(delUrl + "hello")
-        // axiosAPI.delete(delUrl).then(res =>{
-        //   console.log(res.data)
-        //   window.location.reload();
-        // })
+        const delUrl = '/api/Recipe/' + event;
+        console.log(delUrl + "hello");
+        axiosAPI.delete(delUrl).then(res =>{
+          console.log(res.data);
+          window.location.reload();
+        })
         // const recipeGDBRef = firebase.database().ref('RecipeWebApp')
-        firebase.database().ref('RecipeWebApp/'+event).remove()
+        // firebase.database().ref('RecipeWebApp/'+event).remove()
+      };
+
+      const handleSearch = () => {
+        const filterUrl = '/api/recipe/Filter/' + filter;
+        axiosAPI.get(filterUrl).then(res =>{
+          console.log(res.data);
+          const recipeData = res.data;
+          for (let id in recipeData) {
+            console.log("hello from search " + recipeData[id]);
+            const ingredArray = Array.from(JSON.parse(recipeData[id].ingredients));
+            recipeData[id].ingredients = ingredArray.map(item => item.value);
+          }
+          setRecipes(Array.from(recipeData));
+          // window.location.reload();
+        });
       };
 
       return (
@@ -135,8 +161,12 @@ export default function RecipeList() {
                 </Grid>
                 <Grid item >
                   <div style={{ padding: 20 }}>
-                    <TextField id="outlined-basic" label="Search" variant="outlined" style = {{width: "300px"}}/>
+                    <TextField id="outlined-basic" label="Search" variant="outlined" style = {{width: "300px"}} onChange={(event)=>handleFilter(event)}/>
+                    <Button variant="contained" size="small" color="primary" style = {{height: "55px"}} onClick={(event) => handleSearch() }>
+                      Search
+                    </Button>
                   </div>
+
                 </Grid>
               </Grid>
               <Container className={classes.cardGrid} maxWidth="md">

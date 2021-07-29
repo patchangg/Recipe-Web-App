@@ -4,13 +4,15 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button, List, Paper, IconButton, TextField } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
-
+// Todo? Input Constrictions
 
 const initialList = [];
 
-// const axiosAPI = axios.create({
-//       baseURL: 'https://localhost:5001',
-// })
+const axiosAPI = axios.create({
+      baseURL: 'https://localhost:5001',
+      headers: {'Access-Control-Allow-Origin': 'https://localhost:5001',
+                  "Content-type": "application/json"}
+    });
 
 export default function AddRecipe() {
 
@@ -23,21 +25,21 @@ export default function AddRecipe() {
 
       function handleChange(event) {
             setValue(event.target.value);
-      }
+      };
          
       function handleAdd() {
             const newList = ingredients.concat({ value }); 
             setIngredients(newList);
             setValue('');
-      }
+      };
 
       function handleRemove(value) {
-            console.log(ingredients)
-            console.log(value)
+            console.log(ingredients);
+            console.log(value);
             const newList = ingredients.filter((item) => item.value !== value);
-            console.log(newList)
+            console.log(newList);
             setIngredients(newList);
-      }
+      };
 
       // const handleFile = event => {
       //       console.log(event.target.files, "$$$$")
@@ -50,45 +52,54 @@ export default function AddRecipe() {
       // }
 
       const handleTitle = event => {
-            setTitle(event.target.value)
-      }
+            setTitle(event.target.value);
+      };
 
       
       const handleDescription = event => {
-            setDescription(event.target.value)
-      }
+            setDescription(event.target.value);
+      };
 
       const handleImage = event => {
-            setImage(event.target.value)
-      }
+            setImage(event.target.value);
+      };
 
       const handleMethod = event => {
-            setMethod(event.target.value)
-      }
+            setMethod(event.target.value);
+      };
 
       const handlePost = event => {
-            const recipeGDBRef = firebase.database().ref('RecipeWebApp')
+            // const recipeGDBRef = firebase.database().ref('RecipeWebApp')
             if (image === "") {
-                  setImage("https://res.cloudinary.com/dhevhiahl/image/upload/v1623412439/recipeAPI/default.png")
-            }
-            recipeGDBRef.push({title: title,
+                  setImage("https://res.cloudinary.com/dhevhiahl/image/upload/v1623412439/recipeAPI/default.png");
+            };
+            // recipeGDBRef.push({title: title,
+            //       description: description,
+            //       ingredients: JSON.stringify(ingredients),
+            //       method: method,
+            //       image: image, })
+            axiosAPI.post('/api/Recipe', {
+                  title: title,
                   description: description,
                   ingredients: JSON.stringify(ingredients),
                   method: method,
-                  image: image, })
+                  image: image, }).then(res =>{
+                  console.log(res);
+                  console.log(res.data);
+            });
             // firebasePost().then(resp => {
             //       console.log(resp)
             // });
-      }
+      };
 
       async function firebasePost() {
-            const recipeGDBRef = firebase.database().ref('RecipeWebApp')
+            const recipeGDBRef = firebase.database().ref('RecipeWebApp');
             const gResponse = await recipeGDBRef.push({title: title,
                   description: description,
                   ingredients: JSON.stringify(ingredients),
                   method: method,
-                  image: image, })
-            return gResponse
+                  image: image, });
+            return gResponse;
       };
 
       return (

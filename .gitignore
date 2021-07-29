@@ -477,3 +477,4 @@ client-app/package-lock.json
 client-app/package.json
 *.cache
 client-app/src/util/Firebase.js
+recipe-api/RWPfirebase.json

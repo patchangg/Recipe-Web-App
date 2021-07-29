@@ -1,26 +1,34 @@
 using System;
 using Microsoft.AspNetCore.Http;
+using Google.Cloud.Firestore;
 
 namespace recipe_api.Models
 {
+    [FirestoreData]
     public class Recipe
     {
         // Unique Identifier
-        public Guid id { get; set; }
+        [FirestoreProperty]
+        public string id { get; set; }
 
         // Recipe Title
-        public string title { get; set; }
+        [FirestoreProperty]
+        public string Title { get; set; }
 
         // Recipe Description
-        public string description { get; set; }
+        [FirestoreProperty]
+        public string Description { get; set; }
 
         // Recipe Ingredients
-        public string ingredients { get; set; }
+        [FirestoreProperty]
+        public string Ingredients { get; set; }
 
         // Recipe Cooking Instructions
-        public string method { get; set; }
+        [FirestoreProperty]
+        public string Method { get; set; }
 
         // Recipe Image
-        public string image { get; set; }
+        [FirestoreProperty]
+        public string Image { get; set; }
     }
 }
