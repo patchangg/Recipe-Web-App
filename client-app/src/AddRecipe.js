@@ -1,8 +1,7 @@
 import axios from "axios";
 import firebase from './util/Firebase.js';
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { useFormik, Field, FieldArray } from 'formik';
+import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { Button, List, Paper, IconButton, TextField } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -20,10 +19,10 @@ export default function AddRecipe() {
 
       const [value, setValue] = React.useState('');
       const [ingredients, setIngredients] = React.useState(initialList);
-      const [title,setTitle] = React.useState('');
-      const [description,setDescription] = React.useState('');
-      const [method,setMethod] = React.useState('');
-      const [image,setImage] = React.useState("https://res.cloudinary.com/dhevhiahl/image/upload/v1623412439/recipeAPI/default.png");
+      const [title, setTitle] = React.useState('');
+      const [description, setDescription] = React.useState('');
+      const [method, setMethod] = React.useState('');
+      const [image, setImage] = React.useState("https://res.cloudinary.com/dhevhiahl/image/upload/v1623412439/recipeAPI/default.png");
 
       const validationSchema = yup.object({
             title: yup
@@ -48,19 +47,15 @@ export default function AddRecipe() {
             },
             validationSchema: validationSchema,
             onSubmit: (values) => {
-                  //alert(JSON.stringify(values, null, 2));
                   if (image === '') {
                         setImage("https://res.cloudinary.com/dhevhiahl/image/upload/v1623412439/recipeAPI/default.png");
                   };
-                  console.log(values);
                   axiosAPI.post('/api/Recipe', {
                         title: values.title,
                         description: values.description,
                         ingredients: JSON.stringify(ingredients),
                         method: values.method,
                         image: image, }).then(res =>{
-                        console.log(res);
-                        console.log(res.data);
                   });
             },
       });
@@ -76,27 +71,13 @@ export default function AddRecipe() {
       };
 
       function handleRemove(value) {
-            console.log(ingredients);
-            console.log(value);
             const newList = ingredients.filter((item) => item.value !== value);
-            console.log(newList);
             setIngredients(newList);
       };
-
-      // const handleFile = event => {
-      //       console.log(event.target.files, "$$$$")
-      //       console.log(event.target.files[0], "$$$$")
-      //       let file = event.target.files[0]
-      //       imgName = file.name
-      //       setTestName(file.name)
-      //       console.log(imgName)
-      //       setImage(file)
-      // }
 
       const handleTitle = event => {
             setTitle(event.target.value);
       };
-
       
       const handleDescription = event => {
             setDescription(event.target.value);
@@ -111,27 +92,16 @@ export default function AddRecipe() {
       };
 
       const handlePost = event => {
-            // const recipeGDBRef = firebase.database().ref('RecipeWebApp')
             if (image === "") {
                   setImage("https://res.cloudinary.com/dhevhiahl/image/upload/v1623412439/recipeAPI/default.png");
             };
-            // recipeGDBRef.push({title: title,
-            //       description: description,
-            //       ingredients: JSON.stringify(ingredients),
-            //       method: method,
-            //       image: image, })
             axiosAPI.post('/api/Recipe', {
                   title: title,
                   description: description,
                   ingredients: JSON.stringify(ingredients),
                   method: method,
                   image: image, }).then(res =>{
-                  console.log(res);
-                  console.log(res.data);
             });
-            // firebasePost().then(resp => {
-            //       console.log(resp)
-            // });
       };
 
       async function firebasePost() {

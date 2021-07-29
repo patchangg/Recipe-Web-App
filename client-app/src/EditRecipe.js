@@ -5,6 +5,7 @@ import { Button, List, Paper, IconButton, TextField } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import firebase from './util/Firebase.js';
 // Todo? Input Constrictions
+
 const initialList = [];
 
 const axiosAPI = axios.create({
@@ -37,13 +38,6 @@ export default function EditRecipe() {
                   setMethod(dataSet.method);
                   setImage(dataSet.image);
             });
-            // firebase.database().ref('RecipeWebApp/'+locations.state.data).on('value',function(snapshot){
-            //       setTitle(snapshot.val().title)
-            //       setImage(snapshot.val().image)
-            //       setIngredients(JSON.parse(snapshot.val().ingredients))
-            //       setDescription(snapshot.val().description)
-            //       setMethod(snapshot.val().method)
-            // });
           }, [] );
 
       function handleChange(event) {
@@ -63,13 +57,6 @@ export default function EditRecipe() {
             console.log(newList);
             setIngredients(newList);
       };
-
-      // const handleFile = event => {
-      //       console.log(event.target.files, "$$$$")
-      //       console.log(event.target.files[0], "$$$$")
-      //       let file = event.target.files[0]
-      //       setImage(file)
-      // }
 
       const handleTitle = event => {
             setTitle(event.target.value);
@@ -97,16 +84,8 @@ export default function EditRecipe() {
                   ingredients: JSON.stringify(ingredients),
                   method: method,
                   image: image, }).then(res =>{
-                  console.log(res);
-                  console.log(res.data);
             });
-            // firebase.database().ref('RecipeWebApp/'+locations.state.data).update({
-            //       title: title,
-            //       description: description,
-            //       ingredients: JSON.stringify(ingredients),
-            //       method: method,
-            //       image: image,
-            // });
+
       };
       return (
             <div className="EditRecipe">

@@ -1,6 +1,5 @@
 import axios from "axios";
-import firebase from './util/Firebase.js';
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Card, CardActions, CardContent, CardMedia, 
   Container, Grid, makeStyles, TextField, Typography, Modal } from '@material-ui/core';
@@ -86,76 +85,39 @@ export default function RecipeList() {
       useEffect(() => {
         axiosAPI.get('/api/Recipe').then(res =>{
               const recipeData = res.data;
-              //setAppState({ recipes: recipeData })
-              //console.log(recipeData);
               for (let id in recipeData) {
-                console.log(recipeData[id].ingredients);
                 const ingredArray = Array.from(JSON.parse(recipeData[id].ingredients));
                 recipeData[id].ingredients = ingredArray.map(item => item.value);
               }
               setRecipes(recipeData);
         });
-        // axiosAPI.get('/api/Recipe');
-        // const recipeGDBRef = firebase.database().ref('RecipeWebApp')
-        // recipeGDBRef.on('value',(snapshot) =>{
-        //   const recipesGot = snapshot.val();
-        //   console.log(recipesGot)
-        //   const recipesList = [];
-        //   const counter = 0
-        //   for (let id in recipesGot) {
-        //     //console.log(recipesGot[id])
-        //     //console.log(recipesGot[id].ingredients)
-        //     const title = recipesGot[id].title
-        //     const description = recipesGot[id].description
-        //     const image = recipesGot[id].image
-        //     const ingredArray = Array.from(JSON.parse(recipesGot[id].ingredients))
-        //     const ingredients = ingredArray.map(item => item.value)
-        //     //const recIngred = recipesGot[id].ingredients
-        //     const method = recipesGot[id].method
-        //     //recipesList.push({id,recTitle,recDesc,recImage,recIngred,recMethod})
-        //     recipesList.push({id,title,description,image,ingredients,method})
-        //      //recipesList.push({id, ... recipesGot[id]});
-        //     // console.log(recipesList[counter].ingredients)
-            
-        //   }
-        //   console.log(recipesList)
-        //   setRecipes(recipesList)
-        // })
       }, []);
 
       const handleDelete = event => {
-        //event.preventDefault();
         const delUrl = '/api/Recipe/' + event;
-        console.log(delUrl + "hello");
         axiosAPI.delete(delUrl).then(res =>{
-          console.log(res.data);
           window.location.reload();
         })
-        // const recipeGDBRef = firebase.database().ref('RecipeWebApp')
-        // firebase.database().ref('RecipeWebApp/'+event).remove()
       };
 
       const handleSearch = () => {
         const filterUrl = '/api/recipe/Filter/' + filter;
         axiosAPI.get(filterUrl).then(res =>{
-          console.log(res.data);
           const recipeData = res.data;
           for (let id in recipeData) {
-            console.log("hello from search " + recipeData[id]);
             const ingredArray = Array.from(JSON.parse(recipeData[id].ingredients));
             recipeData[id].ingredients = ingredArray.map(item => item.value);
           }
           setRecipes(Array.from(recipeData));
-          // window.location.reload();
         });
       };
 
       return (
             <div className="RecipeMain">
-              <Grid justify="space-between" container>
+              <Grid justifyContent="space-between" container>
                 <Grid item xs={2}></Grid>
                 <Grid item>
-                    <div alignItems='center'>
+                    <div alignitems='center'>
                     <center><h1> Recipe List</h1></center>
                     </div>
                 </Grid>
@@ -166,7 +128,6 @@ export default function RecipeList() {
                       Search
                     </Button>
                   </div>
-
                 </Grid>
               </Grid>
               <Container className={classes.cardGrid} maxWidth="md">
