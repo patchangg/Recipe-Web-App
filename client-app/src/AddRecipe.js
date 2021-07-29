@@ -2,6 +2,8 @@ import axios from "axios";
 import firebase from './util/Firebase.js';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useFormik, Field, FieldArray } from 'formik';
+import * as yup from 'yup';
 import { Button, List, Paper, IconButton, TextField } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 // Todo? Input Constrictions
@@ -23,6 +25,46 @@ export default function AddRecipe() {
       const [method,setMethod] = React.useState('');
       const [image,setImage] = React.useState("https://res.cloudinary.com/dhevhiahl/image/upload/v1623412439/recipeAPI/default.png");
 
+      const validationSchema = yup.object({
+            title: yup
+                  .string('Enter the title of the recipe')
+                  .min(1, 'Enter a title')
+                  .required('Title is required'),
+            description: yup
+                  .string('Enter the description of the recipe')
+                  .min(1, 'Cannot be empty')
+                  .required('Description is required'),
+            method: yup
+                  .string('Write down the directions of the recipe.')
+                  .min(1, 'Cannot be empty')
+                  .required('Method is required'),
+          });
+
+      const formik = useFormik({
+            initialValues: {
+            title: '',
+            description: '',
+            method: '',
+            },
+            validationSchema: validationSchema,
+            onSubmit: (values) => {
+                  //alert(JSON.stringify(values, null, 2));
+                  if (image === '') {
+                        setImage("https://res.cloudinary.com/dhevhiahl/image/upload/v1623412439/recipeAPI/default.png");
+                  };
+                  console.log(values);
+                  axiosAPI.post('/api/Recipe', {
+                        title: values.title,
+                        description: values.description,
+                        ingredients: JSON.stringify(ingredients),
+                        method: values.method,
+                        image: image, }).then(res =>{
+                        console.log(res);
+                        console.log(res.data);
+                  });
+            },
+      });
+      
       function handleChange(event) {
             setValue(event.target.value);
       };
@@ -105,26 +147,41 @@ export default function AddRecipe() {
       return (
             <div className="AddRecipe">
                   <center>
+                  <form onSubmit={formik.handleSubmit}>
                         <h1>Recipe Name</h1>
-                              <TextField style = {{width: "500px"}} name="title" onChange={(event)=>handleTitle(event)}/>
+                              <TextField 
+                              id="title"
+                              name="title"
+                              label="Recipe Title"
+                              type="title"
+                              style = {{width: "500px"}}
+                              value={formik.values.title}
+                              onChange={formik.handleChange}
+                              error={formik.touched.title && Boolean(formik.errors.title)}
+                              helperText={formik.touched.title && formik.errors.title}
+                              />
                         <h1>Description</h1>
                               <TextField
-                              id="outlined-textarea"
+                              id="description"
+                              name="description"
                               label="Recipe Description"
+                              type="description"
                               rows={2}
                               style = {{width: "600px", marginRight: "10px"}}
                               multiline
                               variant="outlined"
-                              name="description"
-                              onChange={(event)=>handleDescription(event)}
+                              value={formik.values.description}
+                              onChange={formik.handleChange}
+                              error={formik.touched.description && Boolean(formik.errors.description)}
+                              helperText={formik.touched.description && formik.errors.description}
                               />
                         <h1>Image</h1>
-                              <TextField style = {{width: "500px"}} name="image" label="Provide a direct url link to an image"
+                        <TextField style = {{width: "500px"}} name="image" label="Provide a direct url link to an image"
                               onChange={(event)=>handleImage(event)}/>
                         <h1>Ingredients</h1>
                               <TextField style = {{width: "350px", marginRight: "10px"}}
                               type="text" value={value} onChange={handleChange}/>
-                              <Button variant="contained" type="submit" onClick={handleAdd}>Add Ingredient</Button>
+                              <Button variant="contained" onClick={handleAdd}>Add Ingredient</Button>
                               <Paper style={{maxHeight: 200, overflow: 'auto'}}>
                                     <List>
                                           {ingredients.map((item) => (
@@ -136,21 +193,26 @@ export default function AddRecipe() {
                                           ))}                  
 
                                     </List>
-                        </Paper>
+                              </Paper>
                         <h1>Directions</h1>
                               <TextField
-                              id="outlined-textarea"
+                              id="method"
+                              name="method"
                               label="Write out the recipe method/instructions here..."
+                              type="method"
                               rows={6}
                               style = {{width: "550px", marginRight: "10px"}}
                               multiline
                               variant="outlined"
-                              name="method"
-                              onChange={(event)=>handleMethod(event)}
+                              value={formik.values.method}
+                              onChange={formik.handleChange}
+                              error={formik.touched.method && Boolean(formik.errors.method)}
+                              helperText={formik.touched.method && formik.errors.method}
                               />
                         <p>
-                              <button type="submit" onClick={handlePost}>Add Recipe</button>
+                              <button type="submit">Add Recipe</button>
                         </p>
+                        </form>
                   </center>
             </div>
       )
