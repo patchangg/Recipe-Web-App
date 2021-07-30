@@ -152,24 +152,7 @@ export default function RecipeList() {
                           <Button variant="contained" size="small" color="default" className={classes.button} onClick={() => { setRecipe({...recipe}); showModal();}} startIcon={<Visibility />}>
                             View
                           </Button>
-                          <Modal
-                            open={modalOpen}
-                            onClose={closeModal}
-                            aria-labelledby="simple-modal-title"
-                            aria-describedby="simple-modal-description"
-                          >
-                              <div style={modalStyle} className={classes.paper}>
-                                <h2 id="simple-modal-title">{currRecipe.title}</h2>
-                                  <p id="simple-modal-description">
-                                    {currRecipe.description}
-                                  </p>
-                                  <p>{Array.from(currRecipe.ingredients).map((ingredient) => {
-                                    return <li key="{ingredient}">{ingredient}</li>
-                                  })}</p>
-                                  <p>{currRecipe.method}</p>
-                                  
-                            </div>
-                          </Modal>
+                    
                           <Link to={{pathname: "/EditRecipe", state: { data: recipe.id }}} style={{ textDecoration: 'none' }}>
                             <Button variant="contained" size="small" color="primary" onClick={handleOpen} className={classes.button} startIcon={<Edit />}>
                               Edit
@@ -183,6 +166,23 @@ export default function RecipeList() {
                     </Grid>
                   ))}
                 </Grid>
+                <Modal
+                  open={modalOpen}
+                  onClose={closeModal}
+                  aria-labelledby="simple-modal-title"
+                  aria-describedby="simple-modal-description"
+                >
+                    <div style={modalStyle} className={classes.paper}>
+                      <h2 id="simple-modal-title">{currRecipe.title}</h2>
+                        <p id="simple-modal-description">
+                          {currRecipe.description}
+                        </p>
+                        <p>{Array.from(currRecipe.ingredients).map((ingredient) => {
+                          return <li key={ingredient}>{ingredient}</li>
+                        })}</p>
+                        <p>{currRecipe.method}</p>     
+                    </div>
+                </Modal>
               </Container>
             </div>
       )
