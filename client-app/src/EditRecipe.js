@@ -1,10 +1,10 @@
 import axios from "axios";
+import { useFormik } from 'formik';
 import React, { useState,useEffect } from 'react';
-import { Link,useLocation } from 'react-router-dom';
+import { useLocation, Redirect } from 'react-router-dom';
+import * as yup from 'yup';
 import { Button, List, Paper, IconButton, TextField } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
-import firebase from './util/Firebase.js';
-// Todo? Input Constrictions
 
 const initialList = [];
 
@@ -23,13 +23,28 @@ export default function EditRecipe() {
       const [method,setMethod] = useState('');
       const [image,setImage] = useState("");
       const [recipe,setRecipe] = useState([]);
+      const [state,setState] = useState(false);
 
       const locations = useLocation();
+
+      const validationSchema = yup.object({
+            title: yup
+                  .string('Enter the title of the recipe')
+                  .min(1, 'Enter a title')
+                  .required('Title is required'),
+            description: yup
+                  .string('Enter the description of the recipe')
+                  .min(1, 'Cannot be empty')
+                  .required('Description is required'),
+            method: yup
+                  .string('Write down the directions of the recipe.')
+                  .min(1, 'Cannot be empty')
+                  .required('Method is required'),
+          });
 
       useEffect(() => {
             const putURL = '/api/Recipe/' + locations.state.data;
             axiosAPI.get(putURL).then(res =>{
-                  //console.log(res.data);
                   const dataSet = res.data;
                   setRecipe(dataSet);
                   setIngredients(JSON.parse(dataSet.ingredients));
@@ -39,6 +54,32 @@ export default function EditRecipe() {
                   setImage(dataSet.image);
             });
           }, [] );
+
+      const formik = useFormik({
+            initialValues: {
+            title: title,
+            description: description,
+            method: method,
+            },
+            validationSchema: validationSchema,
+            enableReinitialize: true,
+            onSubmit: (values) => {
+                  if (image === '') {
+                        setImage("https://res.cloudinary.com/dhevhiahl/image/upload/v1623412439/recipeAPI/default.png");
+                  };
+                  console.log(values)
+                  const putURL = '/api/Recipe/' + locations.state.data;
+                  axiosAPI.put(putURL, 
+                        {id: locations.state.data,
+                        title: values.title,
+                        description: values.description,
+                        ingredients: JSON.stringify(ingredients),
+                        method: values.method,
+                        image: image, }).then(res =>{
+                  });
+                  setState(true);
+            },
+      });
 
       function handleChange(event) {
             setValue(event.target.value);
@@ -58,52 +99,44 @@ export default function EditRecipe() {
             setIngredients(newList);
       };
 
-      const handleTitle = event => {
-            setTitle(event.target.value);
-      };
-
       const handleImage = event => {
             setImage(event.target.value);
       };
 
-      const handleDescription = event => {
-            setDescription(event.target.value);
-      };
-
-      const handleMethod = event => {
-            setMethod(event.target.value);
-      };
-
-      const handlePut = event => {
-            // event.preventDefault();
-            const putURL = '/api/Recipe/' + locations.state.data;
-            axiosAPI.put(putURL, 
-                  {id: locations.state.data,
-                  title: title,
-                  description: description,
-                  ingredients: JSON.stringify(ingredients),
-                  method: method,
-                  image: image, }).then(res =>{
-            });
-
-      };
+      if (state === true) {
+            return <Redirect to='/' />
+      }
+      
       return (
             <div className="EditRecipe">
-                  <Link to="/">
-                  <Button variant="contained" color="primary">Back</Button>
-                  </Link>
                   <center>
+                  <form onSubmit={formik.handleSubmit}>
                         <h1>Recipe Name</h1>
-                              <TextField value={title} style = {{width: "500px"}} onChange={(event)=>handleTitle(event)}/>
+                              <TextField 
+                              id="title"
+                              name="title"
+                              label="Recipe Title"
+                              type="title"
+                              style = {{width: "500px"}}
+                              value={formik.values.title}
+                              onChange={formik.handleChange}
+                              error={formik.touched.title && Boolean(formik.errors.title)}
+                              helperText={formik.touched.title && formik.errors.title}
+                              />
                         <h1>Description</h1>
-                              <TextField
-                              id="outlined-textarea"
-                              value={description}
+                        <TextField
+                              id="description"
+                              name="description"
+                              label="Recipe Description"
+                              type="description"
                               rows={2}
                               style = {{width: "600px", marginRight: "10px"}}
                               multiline
                               variant="outlined"
-                              onChange={(event)=>handleDescription(event)}
+                              value={formik.values.description}
+                              onChange={formik.handleChange}
+                              error={formik.touched.description && Boolean(formik.errors.description)}
+                              helperText={formik.touched.description && formik.errors.description}
                               />
                         <h1>Image</h1>
                               <TextField value={image} style = {{width: "500px"}} onChange={(event)=>handleImage(event)}/>
@@ -124,20 +157,24 @@ export default function EditRecipe() {
                                     </List>
                         </Paper>
                         <h1>Directions</h1>
-                              <TextField
-                              id="outlined-textarea"
-                              value={method}
+                        <TextField
+                              id="method"
+                              name="method"
+                              label="Write out the recipe method/instructions here..."
+                              type="method"
                               rows={6}
                               style = {{width: "550px", marginRight: "10px"}}
                               multiline
                               variant="outlined"
-                              onChange={(event)=>handleMethod(event)}
+                              value={formik.values.method}
+                              onChange={formik.handleChange}
+                              error={formik.touched.method && Boolean(formik.errors.method)}
+                              helperText={formik.touched.method && formik.errors.method}
                               />
                         <p>
-                              <Link to="/">
-                              <button type="submit" onClick={handlePut}>Edit Recipe</button>
-                              </Link>
+                              <button type="submit">Edit Recipe</button>
                         </p>
+                        </form>
                   </center>
             </div>
       )

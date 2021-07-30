@@ -164,7 +164,7 @@ export default function RecipeList() {
                                     {currRecipe.description}
                                   </p>
                                   <p>{Array.from(currRecipe.ingredients).map((ingredient) => {
-                                    return <li>{ingredient}</li>
+                                    return <li key="{ingredient}">{ingredient}</li>
                                   })}</p>
                                   <p>{currRecipe.method}</p>
                                   

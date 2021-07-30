@@ -1,11 +1,10 @@
 import axios from "axios";
-import firebase from './util/Firebase.js';
-import React from 'react';
 import { useFormik } from 'formik';
+import React, { useState } from 'react';
+import { Redirect } from 'react-router-dom';
 import * as yup from 'yup';
 import { Button, List, Paper, IconButton, TextField } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
-// Todo? Input Constrictions
 
 const initialList = [];
 
@@ -17,12 +16,10 @@ const axiosAPI = axios.create({
 
 export default function AddRecipe() {
 
-      const [value, setValue] = React.useState('');
-      const [ingredients, setIngredients] = React.useState(initialList);
-      const [title, setTitle] = React.useState('');
-      const [description, setDescription] = React.useState('');
-      const [method, setMethod] = React.useState('');
-      const [image, setImage] = React.useState("https://res.cloudinary.com/dhevhiahl/image/upload/v1623412439/recipeAPI/default.png");
+      const [value, setValue] = useState('');
+      const [ingredients, setIngredients] = useState(initialList);
+      const [image, setImage] = useState("https://res.cloudinary.com/dhevhiahl/image/upload/v1623412439/recipeAPI/default.png");
+      const [state,setState] = useState(false);
 
       const validationSchema = yup.object({
             title: yup
@@ -57,6 +54,7 @@ export default function AddRecipe() {
                         method: values.method,
                         image: image, }).then(res =>{
                   });
+                  setState(true);
             },
       });
       
@@ -75,44 +73,13 @@ export default function AddRecipe() {
             setIngredients(newList);
       };
 
-      const handleTitle = event => {
-            setTitle(event.target.value);
-      };
-      
-      const handleDescription = event => {
-            setDescription(event.target.value);
-      };
-
       const handleImage = event => {
             setImage(event.target.value);
       };
 
-      const handleMethod = event => {
-            setMethod(event.target.value);
-      };
-
-      const handlePost = event => {
-            if (image === "") {
-                  setImage("https://res.cloudinary.com/dhevhiahl/image/upload/v1623412439/recipeAPI/default.png");
-            };
-            axiosAPI.post('/api/Recipe', {
-                  title: title,
-                  description: description,
-                  ingredients: JSON.stringify(ingredients),
-                  method: method,
-                  image: image, }).then(res =>{
-            });
-      };
-
-      async function firebasePost() {
-            const recipeGDBRef = firebase.database().ref('RecipeWebApp');
-            const gResponse = await recipeGDBRef.push({title: title,
-                  description: description,
-                  ingredients: JSON.stringify(ingredients),
-                  method: method,
-                  image: image, });
-            return gResponse;
-      };
+      if (state === true) {
+            return <Redirect to='/' />
+      }
 
       return (
             <div className="AddRecipe">
