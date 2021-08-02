@@ -1,12 +1,11 @@
 import axios from "axios";
-import { useFormik } from 'formik';
+import { Formik, getIn, FieldArray } from 'formik';
 import React, { useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import * as yup from 'yup';
-import { Button, List, Paper, IconButton, TextField } from '@material-ui/core';
+import { Button, IconButton, TextField } from '@material-ui/core';
+import { makeStyles } from "@material-ui/core/styles";
 import DeleteIcon from '@material-ui/icons/Delete';
-
-const initialList = [];
 
 const axiosAPI = axios.create({
       baseURL: 'https://localhost:5001',
@@ -14,11 +13,18 @@ const axiosAPI = axios.create({
                   "Content-type": "application/json"}
     });
 
-export default function AddRecipe() {
+const useStyles = makeStyles(theme => ({
+      delete: {
+        margin: theme.spacing(1)
+      },
+      field: {
+        margin: theme.spacing(1)
+      }
+}));
 
-      const [value, setValue] = useState('');
-      const [ingredients, setIngredients] = useState(initialList);
-      const [image, setImage] = useState("https://res.cloudinary.com/dhevhiahl/image/upload/v1623412439/recipeAPI/default.png");
+export default function AddRecipe() {
+      const classes = useStyles();
+
       const [state,setState] = useState(false);
 
       const validationSchema = yup.object({
@@ -30,52 +36,24 @@ export default function AddRecipe() {
                   .string('Enter the description of the recipe')
                   .min(1, 'Cannot be empty')
                   .required('Description is required'),
+            ingredients: yup
+                  .array('Enter the ingredients of the recipe')
+                  .of(yup.object({value: yup.string('Ingredient')}))
+                  .min(1, 'Cannot be empty')
+                  .required('Ingredients are required'),
             method: yup
                   .string('Write down the directions of the recipe.')
                   .min(1, 'Cannot be empty')
                   .required('Method is required'),
-          });
-
-      const formik = useFormik({
-            initialValues: {
-            title: '',
-            description: '',
-            method: '',
-            },
-            validationSchema: validationSchema,
-            onSubmit: (values) => {
-                  if (image === '') {
-                        setImage("https://res.cloudinary.com/dhevhiahl/image/upload/v1623412439/recipeAPI/default.png");
-                  };
-                  axiosAPI.post('/api/Recipe', {
-                        title: values.title,
-                        description: values.description,
-                        ingredients: JSON.stringify(ingredients),
-                        method: values.method,
-                        image: image, }).then(res =>{
-                  });
-                  setState(true);
-            },
       });
-      
-      function handleChange(event) {
-            setValue(event.target.value);
-      };
-         
-      function handleAdd() {
-            const newList = ingredients.concat({ value }); 
-            setIngredients(newList);
-            setValue('');
-      };
 
-      function handleRemove(value) {
-            const newList = ingredients.filter((item) => item.value !== value);
-            setIngredients(newList);
-      };
-
-      const handleImage = event => {
-            setImage(event.target.value);
-      };
+      const initialValues = {
+             title: '', 
+             description: '', 
+             image: '' ,
+             ingredients: [{value: ''}],
+             method: '',
+      }
 
       if (state === true) {
             return <Redirect to='/' />
@@ -84,72 +62,128 @@ export default function AddRecipe() {
       return (
             <div className="AddRecipe">
                   <center>
-                  <form onSubmit={formik.handleSubmit}>
+                        <Formik
+                              initialValues={initialValues}
+                              validationSchema={validationSchema}
+                              onSubmit={(values) => {
+                                    if (values.image === '') {
+                                          values.image = "https://res.cloudinary.com/dhevhiahl/image/upload/v1623412439/recipeAPI/default.png";
+                                    };
+                                    axiosAPI.post('/api/Recipe', {
+                                          title: values.title,
+                                          description: values.description,
+                                          ingredients: JSON.stringify(values.ingredients),
+                                          method: values.method,
+                                          image: values.image, }).then(res =>{
+                                    })
+                                    setState(true);
+                              }}  
+                        >
+                  {({values, touched, errors, handleChange, handleSubmit, handleBlur}) => (
+                  <form onSubmit={handleSubmit}>
                         <h1>Recipe Name</h1>
                               <TextField 
-                              id="title"
-                              name="title"
-                              label="Recipe Title"
-                              type="title"
-                              style = {{width: "500px"}}
-                              value={formik.values.title}
-                              onChange={formik.handleChange}
-                              error={formik.touched.title && Boolean(formik.errors.title)}
-                              helperText={formik.touched.title && formik.errors.title}
+                                    id="title"
+                                    name="title"
+                                    label="Recipe Title"
+                                    type="title"
+                                    style = {{width: "500px"}}
+                                    value={values.title}
+                                    onChange={handleChange}
+                                    error={touched.title && Boolean(errors.title)}
+                                    helperText={touched.title && errors.title}
                               />
                         <h1>Description</h1>
                               <TextField
-                              id="description"
-                              name="description"
-                              label="Recipe Description"
-                              type="description"
-                              rows={2}
-                              style = {{width: "600px", marginRight: "10px"}}
-                              multiline
-                              variant="outlined"
-                              value={formik.values.description}
-                              onChange={formik.handleChange}
-                              error={formik.touched.description && Boolean(formik.errors.description)}
-                              helperText={formik.touched.description && formik.errors.description}
+                                    id="description"
+                                    name="description"
+                                    label="Recipe Description"
+                                    type="description"
+                                    rows={2}
+                                    style = {{width: "600px", marginRight: "10px"}}
+                                    multiline
+                                    variant="outlined"
+                                    value={values.description}
+                                    onChange={handleChange}
+                                    error={touched.description && Boolean(errors.description)}
+                                    helperText={touched.description && errors.description}
                               />
                         <h1>Image</h1>
-                        <TextField style = {{width: "500px"}} name="image" label="Provide a direct url link to an image"
-                              onChange={(event)=>handleImage(event)}/>
+                              <TextField
+                                    id="image"
+                                    name="image" 
+                                    label="Provide a direct url link to an image"
+                                    style = {{width: "500px"}} 
+                                    onChange={handleChange}
+                              />
                         <h1>Ingredients</h1>
-                              <TextField style = {{width: "350px", marginRight: "10px"}}
-                              type="text" value={value} onChange={handleChange}/>
-                              <Button variant="contained" onClick={handleAdd}>Add Ingredient</Button>
-                              <Paper style={{maxHeight: 200, overflow: 'auto'}}>
-                                    <List>
-                                          {ingredients.map((item) => (
-                                          <li key={item}>{item.value}
-                                          <IconButton edge="end" aria-label="delete">
-                                                <DeleteIcon onClick={() => handleRemove(item.value)}/>
-                                          </IconButton>
-                                          </li>
-                                          ))}                  
+                              <FieldArray name="ingredients">
+                              {({ push, remove }) => (
+                                    <div>
+                                    {values.ingredients.length > 0 && values.ingredients.map((p, index) => {
 
-                                    </List>
-                              </Paper>
+                                    const ingredient = `ingredients[${index}].value`;
+                                    const touchedingredient = getIn(touched, ingredient);
+                                    const erroringredient = getIn(errors, ingredient);
+
+                                    return (
+                                          <div key={index}>
+                                          <TextField
+                                          className={classes.field}
+                                          margin="normal"
+                                          variant="outlined"
+                                          label="Ingredient"
+                                          name={ingredient}
+                                          value={p.value}
+                                          required
+                                          helperText={
+                                                touchedingredient && erroringredient
+                                                ? erroringredient
+                                                : ""
+                                          }
+                                          error={Boolean(touchedingredient && erroringredient)}
+                                          onChange={handleChange}
+                                          onBlur={handleBlur}
+                                          />
+                                          <IconButton edge="end" aria-label="delete">
+                                                      <DeleteIcon className={classes.delete} onClick={() => remove(index)}/>
+                                          </IconButton>
+                                          </div>
+                                    );
+                                    })}
+                                    <Button
+                                    type="button"
+                                    variant="outlined"
+                                    onClick={() =>
+                                          push({ value: "" })
+                                    }
+                                    >
+                                    Add Ingredient
+                                    </Button>
+                                    </div>
+                              )}
+                              </FieldArray>
                         <h1>Directions</h1>
                               <TextField
-                              id="method"
-                              name="method"
-                              label="Write out the recipe method/instructions here..."
-                              type="method"
-                              rows={6}
-                              style = {{width: "550px", marginRight: "10px"}}
-                              multiline
-                              variant="outlined"
-                              value={formik.values.method}
-                              onChange={formik.handleChange}
-                              error={formik.touched.method && Boolean(formik.errors.method)}
-                              helperText={formik.touched.method && formik.errors.method}
+                                    id="method"
+                                    name="method"
+                                    label="Write out the recipe method/instructions here..."
+                                    type="method"
+                                    rows={6}
+                                    style = {{width: "550px", marginRight: "10px"}}
+                                    multiline
+                                    variant="outlined"
+                                    value={values.method}
+                                    onChange={handleChange}
+                                    error={touched.method && Boolean(errors.method)}
+                                    helperText={touched.method && errors.method}
                               />
                         <p>
-                              <button type="submit">Add Recipe</button>
+                              <Button variant="contained" color="primary" type="submit">Add Recipe</Button>
                         </p>
-                        </form>
+                  </form>
+                  )}
+                        </Formik>
                   </center>
             </div>
       )
