@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 export default function TOS() {
       const divStyle = {
             margin: '50px 100px 0px 100px'
       };
+
+      useEffect(() => {
+            window.scrollTo(0, 0);
+      }, []);
 
       return (
             <div className="privacy" style={divStyle}>
