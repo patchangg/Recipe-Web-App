@@ -6,6 +6,8 @@ import HelpRecipe from './HelpRecipe';
 import RecipeList from './RecipeList';
 import Navbar from './Navbar';
 import Footer from './Footer';
+import PrivacyPolicy from './PrivacyPolicy';
+import TOS from './TOS';
 
 export default function App() {
 
@@ -17,6 +19,8 @@ export default function App() {
             <Route path ="/AddRecipe" component={withRouter(AddRecipe)}/>
             <Route path ="/EditRecipe" component={withRouter(EditRecipe)}/>
             <Route path ="/HelpRecipe" component={withRouter(HelpRecipe)}/>
+            <Route path ="/PrivacyPolicy" component={withRouter(PrivacyPolicy)}/>
+            <Route path ="/TOS" component={withRouter(TOS)}/>
           </Switch>
           <Footer />
         </div>
