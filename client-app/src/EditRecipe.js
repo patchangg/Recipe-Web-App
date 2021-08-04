@@ -6,13 +6,13 @@ import * as yup from 'yup';
 import { Button, IconButton, TextField } from '@material-ui/core';
 import { makeStyles } from "@material-ui/core/styles";
 import DeleteIcon from '@material-ui/icons/Delete';
-
+// Endpoint API access
 const axiosAPI = axios.create({
       baseURL: 'https://localhost:5001',
       headers: {'Access-Control-Allow-Origin': 'https://localhost:5001',
                   "Content-type": "application/json"}
     })
-
+// Spacing for the delete button to ensure it aligns with the ingredient array
 const useStyles = makeStyles(theme => ({
       delete: {
         margin: theme.spacing(1)
@@ -24,7 +24,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function EditRecipe() {
       const classes = useStyles();
-
+      // Store the database values into variables
       const [value, setValue] = useState('');
       const [ingredients, setIngredients] = useState([]);
       const [title,setTitle] = useState('');
@@ -33,9 +33,9 @@ export default function EditRecipe() {
       const [image,setImage] = useState("");
       const [recipe,setRecipe] = useState([]);
       const [state,setState] = useState(false);
-
+      // Gets the ID for the database from the previous page call
       const locations = useLocation();
-
+      // Validation for the input fields to ensure they are not empty before submitting
       const validationSchema = yup.object({
             title: yup
                   .string('Enter the title of the recipe')
@@ -55,7 +55,7 @@ export default function EditRecipe() {
                   .min(1, 'Cannot be empty')
                   .required('Method is required'),
       });
-
+      // Sets the initial values as the values from the database
       const initialValues = {
             title: title, 
             description: description, 
@@ -63,7 +63,7 @@ export default function EditRecipe() {
             ingredients: ingredients,
             method: method,
      }
-
+      // Gathers information from the Firestore Database through an Endpoint API call 
       useEffect(() => {
             const putURL = '/api/Recipe/' + locations.state.data;
             axiosAPI.get(putURL).then(res =>{
@@ -76,7 +76,7 @@ export default function EditRecipe() {
                   setImage(dataSet.image);
             });
           }, [] );
-
+      // Once the submit button has been pressed, redirect to the home page
       if (state === true) {
             return <Redirect to='/' />
       }

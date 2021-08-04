@@ -24,11 +24,14 @@ namespace recipe_api.Controllers
         {
             string path = @"RWPfirebase.json";
             Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS",path);
+            // Create a connection to the Firestore Database
             FirestoreDb db = FirestoreDb.Create("recipe-web-app-64a48");
+            // Query the database based on the user input filter and get back the results
             CollectionReference recipesCollection = db.Collection("RecipeWebApp");
             Query allRecipesQuery = recipesCollection.WhereGreaterThanOrEqualTo("Title", Filter);
             List<Recipe> Recipes = new List<Recipe>();
             QuerySnapshot allRecipesQuerySnapshot = await allRecipesQuery.GetSnapshotAsync();
+            // For each recipe in the database, convert it into a recipe object and store it in a list
             foreach (DocumentSnapshot documentSnapshot in allRecipesQuerySnapshot)
             {
                 List<string> recipeDocument = new List<string>();

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { Button, Card, CardActions, CardContent, CardMedia, 
   Container, Grid, makeStyles, TextField, Typography, Modal } from '@material-ui/core';
 import { Delete, Edit, Visibility } from '@material-ui/icons';
-
+// Modal Alignment
 function getModalStyle() {
   const top = 50;
   const left = 50;
@@ -15,13 +15,13 @@ function getModalStyle() {
     transform: `translate(-${top}%, -${left}%)`,
   };
 };
-
+// Endpoint API access
 const axiosAPI = axios.create({
   baseURL: 'https://localhost:5001',
   headers: {'Access-Control-Allow-Origin': 'https://localhost:5001',
               "Content-type": "application/json"}
 });
-
+// Styling for the recipe grid so they are consistently sized
 const useStyles = makeStyles((theme) => ({
       cardGrid: {
         paddingTop: theme.spacing(5),
@@ -55,13 +55,14 @@ const useStyles = makeStyles((theme) => ({
 
 export default function RecipeList() {
       const classes = useStyles();
+      // Store the recipes into variables and modal opening and closing states
       const [open, setOpen] = useState(false);
       const [modalStyle] = useState(getModalStyle);
       const [currRecipe, setRecipe] = useState({id:'', title:'', description:'', ingredients:'', method:'', image:''});
       const [modalOpen, setmodalOpen] = useState(false);
       const [recipes,setRecipes] = useState([]);
       const [filter,setFilter] = useState('');
-
+      // Helper Functions for the modals
       const showModal = () => {
         setmodalOpen(true);
       };
@@ -81,7 +82,7 @@ export default function RecipeList() {
       const handleFilter = event => {
         setFilter(event.target.value)
       };
-
+      // Gathers information from the Firestore Database through an Endpoint API call 
       useEffect(() => {
         axiosAPI.get('/api/Recipe').then(res =>{
               const recipeData = res.data;
@@ -92,14 +93,14 @@ export default function RecipeList() {
               setRecipes(recipeData);
         });
       }, []);
-
+      // Sends a Delete Endpoint API call for the recipe
       const handleDelete = event => {
         const delUrl = '/api/Recipe/' + event;
         axiosAPI.delete(delUrl).then(res =>{
           window.location.reload();
         })
       };
-
+      // Sends the user input back to the endpoint to get filtered recipes based on what they want
       const handleSearch = () => {
         const filterUrl = '/api/recipe/Filter/' + filter;
         axiosAPI.get(filterUrl).then(res =>{

@@ -6,13 +6,13 @@ import * as yup from 'yup';
 import { Button, IconButton, TextField } from '@material-ui/core';
 import { makeStyles } from "@material-ui/core/styles";
 import DeleteIcon from '@material-ui/icons/Delete';
-
+// Endpoint API access
 const axiosAPI = axios.create({
       baseURL: 'https://localhost:5001',
       headers: {'Access-Control-Allow-Origin': 'https://localhost:5001',
                   "Content-type": "application/json"}
     });
-
+// Spacing for the delete button to ensure it aligns with the ingredient array
 const useStyles = makeStyles(theme => ({
       delete: {
         margin: theme.spacing(1)
@@ -24,9 +24,9 @@ const useStyles = makeStyles(theme => ({
 
 export default function AddRecipe() {
       const classes = useStyles();
-
+      // Checks if submit has been pressed, if so redirect to home page
       const [state,setState] = useState(false);
-
+      // Validation for the input fields to ensure they are not empty before submitting
       const validationSchema = yup.object({
             title: yup
                   .string('Enter the title of the recipe')
@@ -46,7 +46,7 @@ export default function AddRecipe() {
                   .min(1, 'Cannot be empty')
                   .required('Method is required'),
       });
-
+      // Initial Values for the input fields, equivalent to useState
       const initialValues = {
              title: '', 
              description: '', 
@@ -54,7 +54,7 @@ export default function AddRecipe() {
              ingredients: [{value: ''}],
              method: '',
       }
-
+      // Once the submit button has been pressed, redirect to the home page
       if (state === true) {
             return <Redirect to='/' />
       }

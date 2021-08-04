@@ -2,7 +2,7 @@ import React from 'react';
 import Typography from '@material-ui/core/Typography';
 import "./css/Footer.css";
 import { Link } from 'react-router-dom';
-
+// Footer Component to render on every page
 export default function Footer() {
     return (
         <div className="footer">

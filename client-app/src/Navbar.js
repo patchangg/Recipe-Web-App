@@ -6,7 +6,7 @@ import Button from '@material-ui/core/Button';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-
+// Navbar Styling to get consistent spacing
 const useStyles = makeStyles((theme) => ({
       root: {
         flexGrow: 1,
@@ -16,6 +16,7 @@ const useStyles = makeStyles((theme) => ({
         marginRight: theme.spacing(2),
       },
     }));
+
 export default function RecipeList() {
       const classes = useStyles();
       return (
