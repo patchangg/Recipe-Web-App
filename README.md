@@ -9,4 +9,4 @@ Backend: C# (ASP.NET Core v5.0)
 Database: Firestore Database (NoSQL)  
 
 ## Deployment Link
-Link: (Coming Soon)
+Link: recipe-web-app-64a48.firebaseapp.com
